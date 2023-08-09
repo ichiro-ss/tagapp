@@ -1,2 +1,6 @@
 # Mac OS
 .DS_Store
+
+# MySQL data
+mysql/mysql_data
+mysql/logs
