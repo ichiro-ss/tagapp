@@ -8,7 +8,7 @@ services:
     volumes:
       - ./app-plate:/go/src/github.com/app-plate
     ports:
-      - 8000:3000
+      - "5000:5000"
     tty: true
     env_file:
       - ./build/.go_env
