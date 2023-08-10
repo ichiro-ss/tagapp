@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app-plate/kohinigeee/data"
 	"app-plate/kohinigeee/handler"
 	"fmt"
 	"net/http"
@@ -13,6 +14,9 @@ func setHandle() {
 
 func main() {
 
+	db := data.GetMydb()
+	defer db.Close()
+
 	serverURL := "0.0.0.0:5000"
 	server := http.Server{
 		Addr: serverURL,
@@ -21,4 +25,5 @@ func main() {
 	fmt.Println("Start Listen " + serverURL)
 	setHandle()
 	server.ListenAndServe()
+
 }
