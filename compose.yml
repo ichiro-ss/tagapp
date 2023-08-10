@@ -1,0 +1,46 @@
+version: "3"
+services:
+  front-app:
+    build:
+      context: ./front-end
+    ports:
+      - "9000:3000"
+    volumes:
+      - ./front-end/front-app:/app
+      - node_modules:/app/node_modules
+    command: sh -c "npm run dev"
+  app-plate:
+    container_name: app-plate-go
+    build:
+      context: ./back-end
+      dockerfile: ./build/Dockerfile
+    depends_on:
+      - db
+    volumes:
+      - ./back-end/app-plate:/go/src/github.com/app-plate
+    ports:
+      - "5000:5000"
+    tty: true
+    env_file:
+      - ./back-end/build/.go_env
+    environment:
+      - TZ=Asia/Tokyo
+    networks:
+      - tagapp_backend_network
+    command: sh -c "go run ./cmd/main.go"
+  db:
+    build: ./back-end/mysql/
+    volumes:
+      - ./back-end/mysql/mysql_data:/var/lib/mysql         # perpetuation of data
+      - ./back-end/mysql/sqls:/docker-entrypoint-initdb.d  # pushing initial data
+      - ./back-end/mysql/logs:/var/log/mysql               # log record
+    env_file:
+      - ./back-end/mysql/.env_mysql
+    networks:
+      - tagapp_backend_network
+
+volumes:
+  node_modules:
+
+networks:
+  tagapp_backend_network:
