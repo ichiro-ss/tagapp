@@ -21,7 +21,7 @@ app-plate-go        | Start Listen 0.0.0.0:5000
 現状ではどちらもLocalhostでリクエストを待機しています。<br>
 フロントエンド、バックエンドには以下のURLで接続できます。<br>
 
-フロントエンド：localshot:9000<br>
+フロントエンド：localhost:9000<br>
 バックエンド：localhost:5000<br>
 
 ---
