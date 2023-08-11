@@ -1,21 +1,29 @@
 package main
 
 import (
-	"app-plate/kohinigeee/sublib"
+	"app-plate/kohinigeee/data"
+	"app-plate/kohinigeee/handler"
+	"fmt"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	engin := gin.Default()
-	engin.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "hello world",
-		})
-	})
+func setHandle() {
+	http.HandleFunc("/test", handler.TestHandler)
+	http.HandleFunc("/print", handler.TestHandlerPrint)
+}
 
-	sublib.TestFunc()
-	engin.Run(":3000")
+func main() {
+
+	db := data.GetMydb()
+	defer db.Close()
+
+	serverURL := "0.0.0.0:5000"
+	server := http.Server{
+		Addr: serverURL,
+	}
+
+	fmt.Println("Start Listen " + serverURL)
+	setHandle()
+	server.ListenAndServe()
 
 }
