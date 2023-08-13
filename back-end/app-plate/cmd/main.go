@@ -1,10 +1,12 @@
 package main
 
 import (
-	"app-plate/kohinigeee/data"
-	"app-plate/kohinigeee/handler"
+	"app-plate/data"
+	"app-plate/handler"
 	"fmt"
 	"net/http"
+
+	_ "app-plate/data"
 )
 
 func setHandle() {
@@ -16,6 +18,10 @@ func main() {
 
 	db := data.GetMydb()
 	defer db.Close()
+
+	if db == nil {
+		fmt.Println("Database is nil pointer")
+	}
 
 	serverURL := "0.0.0.0:5000"
 	server := http.Server{
