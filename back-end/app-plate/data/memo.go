@@ -20,7 +20,10 @@ type Memo struct {
 
 // Memoのデータベースへ作成
 func (memo *Memo) CreateMemo() (int64, error) {
-	result, err := mydb.Exec("INSERT INTO memo (title, user_id, content, created_at, pic_path) VALUES (?, ?, ?)", memo.Title, memo.UserId, memo.Content, memo.CreatedAt, memo.PicPath)
+	result, err := mydb.Exec(
+		"INSERT INTO memo (title, user_id, content, created_at, pic_path) VALUES (?, ?, ?)",
+		memo.Title, memo.UserId, memo.Content, memo.CreatedAt, memo.PicPath,
+	)
 	if err != nil {
 		return 0, fmt.Errorf("createMemo: %v", err)
 	}
@@ -68,7 +71,27 @@ func MemoByUser(user_id int64) ([]Memo, error) {
 	return memos, nil
 }
 
+// Memoの更新関数
+func (memo *Memo) UpdateMemo() error {
+	_, err := mydb.Exec(
+		"UPDATE memo SET 'title'=?, 'user_id'=?, 'content'=?, 'created_at'=?, 'pic_path'=? WHERE id = ?", memo.Title, memo.UserId, memo.Content, memo.CreatedAt, memo.PicPath, memo.Id,
+	)
+	if err != nil {
+		return fmt.Errorf("updateMemo: %v", err)
+	}
+	return nil
+}
+
 // Memoの削除関数
+func (memo *Memo) DeleteMemo() error {
+	_, err := mydb.Exec(
+		"DELETE FROM memo WHERE id = ?", memo.Id,
+	)
+	if err != nil {
+		return fmt.Errorf("deleteMemo: %v", err)
+	}
+	return nil
+}
 
 //--------Memoオブジェクト----->
 
