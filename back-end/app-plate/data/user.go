@@ -3,7 +3,6 @@ package data
 import (
 	"database/sql"
 	"fmt"
-	"log"
 )
 
 // <-------Userテーブルのテーブル名+各カラム名-----
@@ -20,7 +19,7 @@ var db *sql.DB
 
 type User struct {
 	Id       string `json:"id"`
-	Hashpass string
+	Hashpass string `json:"-"`
 }
 
 // Userのデータベースへ作成
@@ -37,7 +36,6 @@ func (user *User) Create() error {
 	defer stmt.Close()
 	_, err = stmt.Exec(user.Id, user.Hashpass)
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
 
@@ -47,7 +45,7 @@ func (user *User) Create() error {
 // Userのidによる取得関数
 func GetUser(id string) (user User, err error) {
 	user = User{}
-	statement := fmt.Sprintf("SELECT %s, %s from %s", useridCol, passCol, tableName)
+	statement := fmt.Sprintf("SELECT %s, %s from %s WHERE %s = ?", useridCol, passCol, tableName, useridCol)
 
 	stmt, err := db.Prepare(statement)
 	if err != nil {
@@ -55,7 +53,11 @@ func GetUser(id string) (user User, err error) {
 	}
 	defer stmt.Close()
 
-	stmt.QueryRow().Scan(&user.Id, &user.Hashpass)
+	err = stmt.QueryRow(id).Scan(&user.Id, &user.Hashpass)
+
+	if err != nil {
+		return user, err
+	}
 
 	return user, err
 }
@@ -73,7 +75,6 @@ func (user *User) Delete() error {
 	_, err = stmt.Exec(user.Id)
 
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
 

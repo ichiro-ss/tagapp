@@ -8,11 +8,13 @@ import (
 	"app-plate/handler"
 
 	_ "app-plate/data"
+	_ "app-plate/lib"
 )
 
 func setHandle() {
 	http.HandleFunc("/test", handler.TestHandler)
 	http.HandleFunc("/print", handler.TestHandlerPrint)
+	http.HandleFunc("/api/login", handler.LoginHandler)
 }
 
 func main() {
