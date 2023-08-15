@@ -22,7 +22,8 @@ func SetCrosOptions(w http.ResponseWriter, r *http.Request) (isOptions bool) {
 			w.Header().Set("Access-Control-Allow-Origin", value)
 		}
 	}
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	// w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, access-control-allow-credentials")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	w.Header().Set("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
 	w.Header().Set("Content-Type", "application/json")

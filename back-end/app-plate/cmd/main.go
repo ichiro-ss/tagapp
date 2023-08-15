@@ -15,6 +15,7 @@ func setHandle() {
 	http.HandleFunc("/test", handler.TestHandler)
 	http.HandleFunc("/print", handler.TestHandlerPrint)
 	http.HandleFunc("/api/login", handler.LoginHandler)
+	http.HandleFunc("/api/logout", handler.LogoutHandler)
 }
 
 func main() {
