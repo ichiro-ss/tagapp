@@ -109,3 +109,17 @@ go get [追加したいライブラリのURL]
 ```
 npm install [追加いライブラリ名]
 ```
+
+## CORS(Cross-Origin Rsource Sharing対策)
+CORS対策のために、クロスエンド側にはリクエストに対して以下のような設定を追加してください。<br>
+これらの設定が適用されていないと、バックエンド側でCookieが利用できず一部のAPIが機能しません。<br>
+リクエストにこれらの設定を追加する関数をライブラリに用意しとくと便利かなと思います。
+
+```ts
+ const request = {
+  creadentials:"include",
+  headers: {
+    "Access-Control-Allow-Credentials": "true",
+  }
+ }
+```

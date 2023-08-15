@@ -4,6 +4,7 @@ import (
 	"app-plate/data"
 	"app-plate/lib"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -46,6 +47,33 @@ func parseRequestParams(w http.ResponseWriter, r *http.Request) (params apiParam
 	return
 }
 
+// ログインユーザの取得
+func loginGetHandle(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	gbsession := lib.GetGlobalSessions()
+	sess := gbsession.SessionStart(w, r)
+	user := lib.GetSessionUser(&sess)
+
+	if user == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		setMessage(w, "ログインしていません")
+		return
+	}
+
+	encoder := json.NewEncoder(w)
+	err = encoder.Encode(user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		setMessage(w, "Jsonへの変換ができませんでした")
+		return
+	}
+
+	w.Header().Set("Content-Type", ContentJsonStr)
+	w.WriteHeader(http.StatusOK)
+
+}
+
 // アカウントの作成
 func loginPostHandle(w http.ResponseWriter, r *http.Request) {
 	var err error
@@ -76,9 +104,12 @@ func loginPostHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 // アカウントのログイン
-func loginGetHandle(w http.ResponseWriter, r *http.Request) {
+func loginPutHandle(w http.ResponseWriter, r *http.Request) {
 
 	var err error
+	gbsession := lib.GetGlobalSessions()
+	sess := gbsession.SessionStart(w, r)
+
 	params, isCollectParams := parseRequestParams(w, r)
 	if !isCollectParams {
 		return
@@ -111,9 +142,10 @@ func loginGetHandle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", ContentJsonStr)
 	w.WriteHeader(http.StatusOK)
 
-	gsession := lib.GetGlobalSessions()
-	sess := gsession.SessionStart(w, r)
 	lib.SetSessionUser(&sess, &user)
+
+	tmpuser := lib.GetSessionUser(&sess)
+	fmt.Println("tmpUser: ", tmpuser)
 
 	return
 }
@@ -126,6 +158,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		loginGetHandle(w, r)
+	case http.MethodPut:
+		loginPutHandle(w, r)
 	case http.MethodPost:
 		loginPostHandle(w, r)
 	default:
