@@ -66,7 +66,7 @@ func TestMemoData() {
 	}
 	fmt.Printf("Memo%dの作成に成功しました", addedid)
 
-	fmt.Println("Userの取得開始")
+	fmt.Println("Tagの取得開始")
 	new_memo, err := data.MemoByID(id)
 	if err != nil {
 		log.Fatal(err)
@@ -92,4 +92,54 @@ func TestMemoData() {
 		return
 	}
 	fmt.Println("Memoの削除に成功しました")
+}
+
+func TestTagData() {
+	id := 1
+	tagName := "tagName"
+	userId := "userid"
+	memoNum := 1
+
+	tag := data.Tag{
+		Id: id, TagName: tagName, UserId: userId, MemoNum: memoNum,
+	}
+
+	var err error
+
+	fmt.Println("id:", tag.Id, ", tagName:", tag.TagName, ", userId:", tag.UserId, ", memoNum:", tag.MemoNum)
+	fmt.Println("Tagの作成開始")
+	addedid, err := tag.CreateTag()
+	tag.Id = addedid
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("Tag%dの作成に成功しました", addedid)
+
+	fmt.Println("Tagの取得開始")
+	new_tag, err := data.TagByID(id)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("Tagの取得に成功しました")
+	fmt.Println("id:", new_tag.Id, ", tagName:", new_tag.TagName, ", userId:", new_tag.UserId, ", memoNum:", new_tag.MemoNum)
+
+	fmt.Println("Tagの更新開始")
+	tag.TagName = "updated"
+	err = tag.UpdateTag()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("Tagの更新に成功しました")
+	fmt.Println("id:", new_tag.Id, ", tagName:", new_tag.TagName, ", userId:", new_tag.UserId, ", memoNum:", new_tag.MemoNum)
+
+	fmt.Println("Tagの削除開始")
+	err = tag.DeleteTag()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("Tagの削除に成功しました")
 }

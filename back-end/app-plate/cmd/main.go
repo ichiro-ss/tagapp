@@ -25,6 +25,7 @@ func main() {
 	}
 	gotest.TestUserData()
 	gotest.TestMemoData()
+	gotest.TestTagData()
 
 	serverURL := "0.0.0.0:5000"
 	server := http.Server{

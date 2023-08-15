@@ -11,14 +11,14 @@ import (
 type Tag struct {
 	Id      int `json:"id"`
 	TagName string
-	UserId  int64
-	MemoNum int64
+	UserId  string
+	MemoNum int
 }
 
 // Tagのデータベースへ作成
 func (tag *Tag) CreateTag() (int, error) {
 	result, err := mydb.Exec(
-		"INSERT INTO tag (tagName, userId, memoNum) VALUES (?, ?, ?)",
+		"INSERT INTO tag (tagName, userId, memosNum) VALUES (?, ?, ?)",
 		tag.TagName, tag.UserId, tag.MemoNum,
 	)
 	if err != nil {
@@ -37,7 +37,7 @@ func TagByID(id int) (Tag, error) {
 	var tag Tag
 
 	row := db.QueryRow("SELECT * FROM tag WHERE id = ?", id)
-	if err := row.Scan(&tag.Id, &tag.TagName, &tag.MemoNum); err != nil {
+	if err := row.Scan(&tag.Id, &tag.TagName, &tag.UserId, &tag.MemoNum); err != nil {
 		if err == sql.ErrNoRows {
 			return tag, fmt.Errorf("tagsById %d: no such tag", id)
 		}
@@ -72,7 +72,7 @@ func TagByUser(user_id int) ([]Tag, error) {
 // Tagの更新関数
 func (tag *Tag) UpdateTag() error {
 	_, err := db.Exec(
-		"UPDATE tag SET tagName=?, userId=?, memoNum=? WHERE id = ?", tag.TagName, tag.UserId, tag.MemoNum,
+		"UPDATE tag SET tagName=?, userId=?, memosNum=? WHERE id = ?", tag.TagName, tag.UserId, tag.MemoNum, tag.Id,
 	)
 	if err != nil {
 		return fmt.Errorf("updateTag: %v", err)
