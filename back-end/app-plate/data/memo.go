@@ -21,7 +21,7 @@ type Memo struct {
 // Memoのデータベースへ作成
 func (memo *Memo) CreateMemo() (int64, error) {
 	result, err := mydb.Exec(
-		"INSERT INTO memo (title, user_id, content, created_at, pic_path) VALUES (?, ?, ?)",
+		"INSERT INTO memo (title, user_id, content, created_at, pic_path) VALUES (?, ?, ?, ?, ?)",
 		memo.Title, memo.UserId, memo.Content, memo.CreatedAt, memo.PicPath,
 	)
 	if err != nil {
@@ -93,8 +93,7 @@ func (memo *Memo) DeleteMemo() error {
 	return nil
 }
 
-//--------Memoオブジェクト----->
-
+// --------Memoオブジェクト----->
 func init() {
 	db = GetMydb()
 }

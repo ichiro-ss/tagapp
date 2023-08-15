@@ -20,6 +20,7 @@ CREATE TABLE memo {
 CREATE TABLE tag {
     id INT AUTO_INCREMENT PRIMARY KEY,
     tag_name VARCHAR(128) NOT NULL,
+    user_id INT,
     memos_num INT
 }
 
