@@ -9,22 +9,23 @@ import (
 
 // <-------Tagオブジェクト-----
 type Tag struct {
-	Id      string `json:"id"`
+	Id      int `json:"id"`
 	TagName string
 	UserId  int64
 	MemoNum int64
 }
 
 // Tagのデータベースへ作成
-func (tag *Tag) CreateTag() (int64, error) {
+func (tag *Tag) CreateTag() (int, error) {
 	result, err := mydb.Exec(
-		"INSERT INTO tag (tag_name, user_id, memo_num) VALUES (?, ?, ?)",
+		"INSERT INTO tag (tagName, userId, memoNum) VALUES (?, ?, ?)",
 		tag.TagName, tag.UserId, tag.MemoNum,
 	)
 	if err != nil {
 		return 0, fmt.Errorf("createTag: %v", err)
 	}
-	id, err := result.LastInsertId()
+	created_id, err := result.LastInsertId()
+	id := int(created_id)
 	if err != nil {
 		return 0, fmt.Errorf("createTag: %v", err)
 	}
@@ -32,7 +33,7 @@ func (tag *Tag) CreateTag() (int64, error) {
 }
 
 // Tagのidによる取得関数
-func TagByID(id int64) (Tag, error) {
+func TagByID(id int) (Tag, error) {
 	var tag Tag
 
 	row := db.QueryRow("SELECT * FROM tag WHERE id = ?", id)
@@ -46,32 +47,32 @@ func TagByID(id int64) (Tag, error) {
 }
 
 // TagのUserIdによる取得関数
-func TagByUser(user_id int64) ([]Tag, error) {
+func TagByUser(user_id int) ([]Tag, error) {
 	var tags []Tag
 
-	rows, err := db.Query("SELECT * FROM tag WHERE artist = ?", user_id)
+	rows, err := db.Query("SELECT * FROM tag WHERE userId = ?", user_id)
 	if err != nil {
-		return nil, fmt.Errorf("emosByArtist %q: %v", user_id, err)
+		return nil, fmt.Errorf("tagsByUser %q: %v", user_id, err)
 	}
 	defer rows.Close()
 	// Loop through rows, using Scan to assign column data to struct fields.
 	for rows.Next() {
 		var tag Tag
 		if err := rows.Scan(&tag.Id, &tag.TagName, &tag.UserId, &tag.MemoNum); err != nil {
-			return nil, fmt.Errorf("tagsByArtist %q: %v", user_id, err)
+			return nil, fmt.Errorf("tagsByUser %q: %v", user_id, err)
 		}
 		tags = append(tags, tag)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("tagsByArtist %q: %v", user_id, err)
+		return nil, fmt.Errorf("tagsByUser %q: %v", user_id, err)
 	}
 	return tags, nil
 }
 
 // Tagの更新関数
 func (tag *Tag) UpdateTag() error {
-	_, err := mydb.Exec(
-		"UPDATE tag SET 'tag_name'=?, 'user_id'=?, 'memo_num'=? WHERE id = ?", tag.TagName, tag.UserId, tag.MemoNum,
+	_, err := db.Exec(
+		"UPDATE tag SET tagName=?, userId=?, memoNum=? WHERE id = ?", tag.TagName, tag.UserId, tag.MemoNum,
 	)
 	if err != nil {
 		return fmt.Errorf("updateTag: %v", err)
@@ -81,7 +82,7 @@ func (tag *Tag) UpdateTag() error {
 
 // Tagの削除関数
 func (tag *Tag) DeleteTag() error {
-	_, err := mydb.Exec(
+	_, err := db.Exec(
 		"DELETE FROM tag WHERE id = ?", tag.Id,
 	)
 	if err != nil {

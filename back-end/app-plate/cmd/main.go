@@ -24,6 +24,7 @@ func main() {
 		fmt.Println("Database is nil pointer")
 	}
 	gotest.TestUserData()
+	gotest.TestMemoData()
 
 	serverURL := "0.0.0.0:5000"
 	server := http.Server{
@@ -33,5 +34,4 @@ func main() {
 	fmt.Println("Start Listen " + serverURL)
 	setHandle()
 	server.ListenAndServe()
-
 }
