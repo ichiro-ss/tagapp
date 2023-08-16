@@ -1,18 +1,22 @@
 package main
 
 import (
-	"app-plate/data"
-	"app-plate/gotest"
-	"app-plate/handler"
 	"fmt"
 	"net/http"
 
+	"app-plate/data"
+	"app-plate/handler"
+
 	_ "app-plate/data"
+	_ "app-plate/lib"
 )
 
 func setHandle() {
 	http.HandleFunc("/test", handler.TestHandler)
 	http.HandleFunc("/print", handler.TestHandlerPrint)
+	http.HandleFunc("/api/login", handler.LoginHandler)
+	http.HandleFunc("/api/logout", handler.LogoutHandler)
+	http.HandleFunc("/api/memo", handler.MemoHandler)
 }
 
 func main() {
