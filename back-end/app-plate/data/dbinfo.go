@@ -50,6 +50,8 @@ func init() {
 	mydb = connectDB()
 	if mydb == nil {
 		panic("Can't connect Database")
+	} else {
+		fmt.Println("Finished DB Initilized!")
 	}
 }
 
