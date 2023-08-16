@@ -1,10 +1,11 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './components/header'
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { renderToHTML } from 'next/dist/server/render'
 import { useState } from 'react';
+import useSWR from 'swr';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +25,7 @@ export default function MemoView(): JSX.Element {
       title : "memo1",
       author: "user0",
       body: "this is body of memo1.\n and this is second line.",
-      filepath: "",
+      filepath: "./next.svg",
       id: 1,
       date: "2023-05-14",
       tags: [ "tagA", "tagB" ,"tagC"]
@@ -33,7 +34,7 @@ export default function MemoView(): JSX.Element {
       title : "memo2",
       author: "user5",
       body: "this is body of memo2.\n and this is second line.\n and this is third line.",
-      filepath: "",
+      filepath: "./sample.pdf",
       id: 2,
       date: "2023-06-1",
       tags: [ "tagB", "tagD" ,"tagC"]
@@ -82,7 +83,7 @@ function MemoSelector({handler}:any): JSX.Element{
   );
 }
 
-function MemoDetailedView({memo}:{memo?:Memo}){
+function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
   if(memo == null){
     return(
       <div className='detailedView m-1'>
@@ -114,11 +115,19 @@ function MemoDetailedView({memo}:{memo?:Memo}){
 }
 
 function PreviewThm({filepath}:{filepath:string}): JSX.Element{
-  if(filepath.endsWith(".pdf")){ return <PrevPDF/>; }
-  if(filepath.endsWith(".png")){ return <PrevImg/>;}
-  return <PrevErr/>;
-}
+  if(filepath===""){ return <></>; }
 
-function PrevPDF(): JSX.Element{ return <></>; }
-function PrevImg(): JSX.Element{ return <></>; }
-function PrevErr(): JSX.Element{ return <></>; }
+  const fetcher = (url:string) => fetch(url).then(r => r.blob())
+  const {data, error, isLoading}=useSWR(filepath, fetcher);
+
+  if(!!error) return <div>failed to load</div>;
+  if(isLoading) return <div>loading...</div>;
+
+  if(data==null) return <></>;
+  return(
+    <div>
+      <iframe id='inlineDoc' title='Inline image or PDF' className='w-100' src={URL.createObjectURL(data)}/>
+      {/* PDFはこのままでは見ずらい PDF.js? */}
+    </div>
+  );
+}
