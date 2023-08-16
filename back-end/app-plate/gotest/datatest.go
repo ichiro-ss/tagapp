@@ -8,7 +8,7 @@ import (
 )
 
 func TestUserData() {
-	id := "userid"
+	id := "id"
 	pw := "password2"
 	user := data.User{Id: id, Hashpass: pw}
 
@@ -40,6 +40,11 @@ func TestUserData() {
 	}
 	fmt.Println("Userの削除に成功しました")
 
+	err = user.Create()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 }
 
 func TestMemoData() {
@@ -66,8 +71,8 @@ func TestMemoData() {
 	}
 	fmt.Printf("Memo%dの作成に成功しました", addedid)
 
-	fmt.Println("Tagの取得開始")
-	new_memo, err := data.MemoByID(id)
+	fmt.Println("Memoの取得開始")
+	new_memo, err := data.MemoByID(memo.Id)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -76,7 +81,7 @@ func TestMemoData() {
 	fmt.Println("id:", new_memo.Id, ", title:", new_memo.Title, ", userId:", new_memo.UserId, ", content:", new_memo.Content, ", createdAt:", new_memo.CreatedAt, ", picPath:", new_memo.PicPath)
 
 	fmt.Println("Memoの更新開始")
-	memo.Content = "updated"
+	new_memo.Content = "updated"
 	err = memo.UpdateMemo()
 	if err != nil {
 		log.Fatal(err)
@@ -86,7 +91,7 @@ func TestMemoData() {
 	fmt.Println("id:", new_memo.Id, ", title:", new_memo.Title, ", userId:", new_memo.UserId, ", content:", new_memo.Content, ", createdAt:", new_memo.CreatedAt, ", picPath:", new_memo.PicPath)
 
 	fmt.Println("Memoの削除開始")
-	err = memo.DeleteMemo()
+	err = new_memo.DeleteMemo()
 	if err != nil {
 		log.Fatal(err)
 		return
