@@ -24,6 +24,13 @@ func main() {
 	db := data.GetMydb()
 	defer db.Close()
 
+	if db == nil {
+		fmt.Println("Database is nil pointer")
+	}
+	gotest.TestUserData()
+	gotest.TestMemoData()
+	gotest.TestTagData()
+
 	serverURL := "0.0.0.0:5000"
 	server := http.Server{
 		Addr: serverURL,
@@ -32,5 +39,4 @@ func main() {
 	fmt.Println("Start Listen " + serverURL)
 	setHandle()
 	server.ListenAndServe()
-
 }

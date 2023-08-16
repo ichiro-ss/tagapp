@@ -36,6 +36,8 @@ services:
       - ./back-end/mysql/logs:/var/log/mysql               # log record
     env_file:
       - ./back-end/mysql/.env_mysql
+    ports:
+      - 3306:3306
     networks:
       - tagapp_backend_network
 
