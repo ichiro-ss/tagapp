@@ -7,6 +7,7 @@ import TagToggle from "./components/tagToggle";
 import SearchBar from "./components/searchBar";
 import { handleSearch } from "./components/searchUtils";
 import PopupForm from "./components/popUpForm";
+import MemoList from "./components/memoList";
 
 export default function Home() {
 
@@ -105,6 +106,10 @@ return (
         <PopupForm onClose={handleClosePopup} onCreateMemo={handleCreateMemo} />
       )}
       {/* ... 他のコンテンツ ... */}
+    </div>
+    {/* メモ表示 */}
+    <div>
+      <MemoList />
     </div>
   
   </div>
