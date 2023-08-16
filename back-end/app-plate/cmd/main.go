@@ -16,6 +16,7 @@ func setHandle() {
 	http.HandleFunc("/print", handler.TestHandlerPrint)
 	http.HandleFunc("/api/login", handler.LoginHandler)
 	http.HandleFunc("/api/logout", handler.LogoutHandler)
+	http.HandleFunc("/api/memo", handler.MemoHandler)
 }
 
 func main() {
