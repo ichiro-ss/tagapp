@@ -8,7 +8,7 @@ import (
 )
 
 func TestUserData() {
-	id := "id"
+	id := "userid"
 	pw := "password2"
 	user := data.User{Id: id, Hashpass: pw}
 
@@ -55,24 +55,48 @@ func TestMemoData() {
 	createdAt := time.Now()
 	picPath := "aaa/bb"
 
-	memo := data.Memo{
+	memo1 := data.Memo{
 		Id: id, Title: title, UserId: userId, Content: content, CreatedAt: createdAt, PicPath: picPath,
 	}
-
+	memo2 := data.Memo{
+		Id: 2, Title: title, UserId: userId, Content: content, CreatedAt: createdAt, PicPath: picPath,
+	}
+	memo1_tags := []data.Tag{
+		{Id: 1, TagName: "a", UserId: userId, MemoNum: 1},
+		{Id: 2, TagName: "b", UserId: userId, MemoNum: 1},
+	}
+	memo2_tags := []data.Tag{
+		{Id: 3, TagName: "c", UserId: userId, MemoNum: 1},
+		{Id: 4, TagName: "b", UserId: userId, MemoNum: 1},
+	}
 	var err error
 
-	fmt.Println("id:", memo.Id, ", title:", memo.Title, ", userId:", memo.UserId, ", content:", memo.Content, ", createdAt:", memo.CreatedAt, ", picPath:", memo.PicPath)
+	fmt.Println("id:", memo1.Id, ", title:", memo1.Title, ", userId:", memo1.UserId, ", content:", memo1.Content, ", createdAt:", memo1.CreatedAt, ", picPath:", memo1.PicPath)
 	fmt.Println("Memoの作成開始")
-	addedid, err := memo.CreateMemo()
-	memo.Id = addedid
+	addedid, err := memo1.CreateMemo(memo1_tags)
+	memo1.Id = addedid
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("Memo%dの作成に成功しました", addedid)
+	addedid, err = memo2.CreateMemo(memo2_tags)
+	memo2.Id = addedid
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 	fmt.Printf("Memo%dの作成に成功しました", addedid)
 
+	tag_names, err := data.TagNameByMemo(memo1.Id)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("Memo%dのtagは%sです", memo1.Id, tag_names)
+
 	fmt.Println("Memoの取得開始")
-	new_memo, err := data.MemoByID(memo.Id)
+	new_memo, err := data.MemoByID(memo1.Id)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -82,7 +106,7 @@ func TestMemoData() {
 
 	fmt.Println("Memoの更新開始")
 	new_memo.Content = "updated"
-	err = memo.UpdateMemo()
+	err = memo1.UpdateMemo()
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -97,6 +121,7 @@ func TestMemoData() {
 		return
 	}
 	fmt.Println("Memoの削除に成功しました")
+
 }
 
 func TestTagData() {
