@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { MemoData, memos } from "./memoData";
+import Memo from "./memoTypeDef"
+import { memos } from "./memoData";
 import { sortedTags, tagCountMap } from "./tagCount";
 import TagToggle from "./tagToggle";
 import SearchBar from "./searchBar";
@@ -12,7 +13,7 @@ export const LeftSideComponent = () => {
     setShowTags(!showTags);
   };
 
-  const [searchResults, setSearchResults] = useState<MemoData[]>([]);
+  const [searchResults, setSearchResults] = useState<Memo[]>([]);
   
   const onSearch = (
     searchTerm: string,
@@ -29,7 +30,7 @@ export const LeftSideComponent = () => {
   const handleClosePopup = () => {
     setShowPopup(false);
   };
-  const handleCreateMemo = (memo: MemoData) => {
+  const handleCreateMemo = (memo: Memo) => {
     // 新しいメモの作成処理を実装
     console.log("新しいメモを作成:", memo);
   };
@@ -45,7 +46,7 @@ export const LeftSideComponent = () => {
           {searchResults.map((comment, index) => (
             <li key={index}>
               <h6>{comment.title}</h6>
-              <p>タグ: {comment.tag.join(", ")}</p>
+              <p>タグ: {comment.tags.join(", ")}</p>
               <p>日時: {formatDate(comment.date)}</p>
               <p>コメント: {comment.comment}</p>
             </li>

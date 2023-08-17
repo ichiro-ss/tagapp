@@ -1,13 +1,13 @@
 .memoList {
-    position: fixed;
-    top: 50px;
+    /* position: fixed; */
+    top: 100px;
     left: 250px;
     background-color: #ffffff;
     color: #c1c1c1;
     border: 1px solid #c1c1c1;
     border-radius: 30px;
-    height: 700px;
-    width: 800px;
+    /* height: 700px; */
+    /* width: 800px; */
     display: flex;
     flex-wrap: wrap; /* コンテナが横に並び、行が途切れたら折り返す */
     align-items: flex-start; /* 左寄せに配置 */

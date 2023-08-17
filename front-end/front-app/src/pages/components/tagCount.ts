@@ -1,10 +1,11 @@
-import { MemoData,memos } from "./memoData";
+import Memo from "./memoTypeDef"
+import { memos } from "./memoData";
 
 export const tagCountMap: { [tag: string]: number } = {};
 
 // タグの出現回数を集計
 memos.forEach((comment) => {
-    comment.tag.forEach((tag) => {
+    comment.tags.forEach((tag) => {
       tagCountMap[tag] = (tagCountMap[tag] || 0) + 1;
     });
 });

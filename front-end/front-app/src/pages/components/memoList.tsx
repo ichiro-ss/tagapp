@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { memos, MemoData } from "./memoData"; // ←ここをmemos全部じゃなくて，検索で引っかかったやつだけにする？
+import { memos } from "./memoData"; // ←ここをmemos全部じゃなくて，検索で引っかかったやつだけにする？
 import styles from "../../styles/memoList.module.css";
-
-const MemoList = () => {
-    const [selectedMemo, setSelectedMemo] = useState<MemoData | null>(null);
-  
-    const handleMemoClick = (memo: MemoData) => {
+import Memo from "./memoTypeDef"
+ 
+const MemoList = ( {setSelectedMemo}:{setSelectedMemo:any}) => {
+    const handleMemoClick = (memo: Memo) => {
       setSelectedMemo(memo);
     };
   
@@ -28,7 +27,7 @@ const MemoList = () => {
                     onClick={() => handleMemoClick(memo)}
                 >
                     <h3 className={styles.memoTitle}>{truncateTitle(memo.title)}</h3>
-                    <p className={styles.memoTags}>{truncateTags(renderTags(memo.tag))}</p>
+                    <p className={styles.memoTags}>{truncateTags(renderTags(memo.tags))}</p>
                     <p className={styles.memoComment}>{truncateComment(memo.comment)}</p>
                     <p className={styles.memoDate}>{formatDate(memo.date)}</p>
                 </button>

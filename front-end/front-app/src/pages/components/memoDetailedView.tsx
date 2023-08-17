@@ -1,16 +1,7 @@
 import Head from 'next/head'
 import { useState } from 'react';
 import useSWR from 'swr';
-
-type Memo = {
-  title :string,
-  author:string,
-  body  :string,
-  filepath:string,
-  id: number,
-  date:string,
-  tags:string[]
-};
+import Memo from './memoTypeDef';
 
 export default function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
   if(memo == null){
@@ -25,12 +16,14 @@ export default function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
       <div className='title'>
         <h1> {memo.title} </h1>
       </div>
-      <div className='author'>
-        <h2> Author : {memo.author} </h2>
-      </div>
-      <PreviewDoc filepath={memo.filepath} />
+      { memo.userid &&
+        <div className='author'>
+          <h2> Author : {memo.userid} </h2>
+        </div>
+      }
+      { memo.filepath && <PreviewDoc filepath={memo.filepath} /> }
       <div className='body'>
-        { memo.body.split("\n").map((e) => <div>{e}</div>) }
+        { memo.comment.split("\n").map((e) => <div>{e}</div>) }
       </div>
       <br/>
       <div className='date'>
