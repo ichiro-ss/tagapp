@@ -15,13 +15,13 @@ func TestUserData() {
 	var err error
 
 	fmt.Println("id:", user.Id, ", pass:", user.Hashpass)
-	fmt.Println("Userの作成開始")
-	err = user.Create()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	fmt.Println("Userの作成に成功しました")
+	// fmt.Println("Userの作成開始")
+	// err = user.Create()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// 	return
+	// }
+	// fmt.Println("Userの作成に成功しました")
 
 	fmt.Println("Userの取得開始")
 	user2, err := data.GetUser(id)
@@ -59,7 +59,7 @@ func TestMemoData() {
 		Id: id, Title: title, UserId: userId, Content: content, CreatedAt: createdAt, PicPath: picPath,
 	}
 	memo2 := data.Memo{
-		Id: 2, Title: title, UserId: userId, Content: content, CreatedAt: createdAt, PicPath: picPath,
+		Id: 2, Title: "memoTitle2", UserId: userId, Content: content, CreatedAt: createdAt, PicPath: picPath,
 	}
 	memo1_tags := []data.Tag{
 		{Id: 1, TagName: "a", UserId: userId, MemoNum: 1},
@@ -79,21 +79,21 @@ func TestMemoData() {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("Memo%dの作成に成功しました", addedid)
+	fmt.Printf("Memo%dの作成に成功しました\n", addedid)
 	addedid, err = memo2.CreateMemo(memo2_tags)
 	memo2.Id = addedid
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("Memo%dの作成に成功しました", addedid)
+	fmt.Printf("Memo%dの作成に成功しました\n", addedid)
 
 	tag_names, err := data.TagNameByMemo(memo1.Id)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("Memo%dのtagは%sです", memo1.Id, tag_names)
+	fmt.Printf("Memo%dのtagは%sです\n", memo1.Id, tag_names)
 
 	fmt.Println("Memoの取得開始")
 	new_memo, err := data.MemoByID(memo1.Id)
@@ -103,6 +103,15 @@ func TestMemoData() {
 	}
 	fmt.Println("Memoの取得に成功しました")
 	fmt.Println("id:", new_memo.Id, ", title:", new_memo.Title, ", userId:", new_memo.UserId, ", content:", new_memo.Content, ", createdAt:", new_memo.CreatedAt, ", picPath:", new_memo.PicPath)
+
+	fmt.Println("TagによるMemoの取得")
+	memos, err := data.MemoByTag("b", userId)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("tagがbのmemoは")
+	fmt.Println(memos)
 
 	fmt.Println("Memoの更新開始")
 	new_memo.Content = "updated"

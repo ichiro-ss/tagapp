@@ -41,6 +41,7 @@ func (tag *Tag) CreateTag() (int, error) {
 			return id, nil
 		}
 	}
+	fmt.Printf("Tag%dを作成", tag.Id)
 	return tag.Id, nil
 }
 

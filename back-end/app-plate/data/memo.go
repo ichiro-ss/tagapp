@@ -28,7 +28,7 @@ func (memo *Memo) CreateMemo(tags []Tag) (int, error) {
 		return 0, fmt.Errorf("createMemo: %v", err)
 	}
 	created_id, err := result.LastInsertId()
-	id := int(created_id)
+	memo.Id = int(created_id)
 	if err != nil {
 		return 0, fmt.Errorf("createMemo: %v", err)
 	}
@@ -41,7 +41,7 @@ func (memo *Memo) CreateMemo(tags []Tag) (int, error) {
 		_, _ = CreateTagMap(tag_id, memo.Id)
 
 	}
-	return id, nil
+	return memo.Id, nil
 }
 
 // Memoのidによる取得関数
@@ -77,6 +77,28 @@ func MemoByUser(user_id int) ([]Memo, error) {
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("memosByUser %q: %v", user_id, err)
+	}
+	return memos, nil
+}
+
+// MemoのTagNameによる取得関数
+func MemoByTag(tag_name string, user_id string) ([]Memo, error) {
+	var memos []Memo
+	rows, err := db.Query("SELECT memo.id, memo.title, memo.userId, memo.content, memo.createdAt, memo.picPath FROM memo INNER JOIN tag_map ON memo.id = tag_map.memoId INNER JOIN tag ON tag_map.tagId = tag.id WHERE tagName=? and memo.userId=?", tag_name, user_id)
+	if err != nil {
+		return nil, fmt.Errorf("memosByTag %s: %v", tag_name, err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var memo Memo
+		if err := rows.Scan(&memo.Id, &memo.Title, &memo.UserId, &memo.Content, &memo.CreatedAt, &memo.PicPath); err != nil {
+			return nil, fmt.Errorf("memosByTag %s: %v", tag_name, err)
+		}
+		memos = append(memos, memo)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("memosByTag %s: %v", tag_name, err)
 	}
 	return memos, nil
 }
