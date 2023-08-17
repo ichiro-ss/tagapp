@@ -19,7 +19,7 @@ type Memo struct {
 }
 
 // Memoのデータベースへ作成
-func (memo *Memo) CreateMemo() (int, error) {
+func (memo *Memo) CreateMemo(tags []Tag) (int, error) {
 	result, err := db.Exec(
 		"INSERT INTO memo (title, userid, content, createdAt, picPath) VALUES (?, ?, ?, ?, ?)",
 		memo.Title, memo.UserId, memo.Content, memo.CreatedAt, memo.PicPath,
@@ -31,6 +31,15 @@ func (memo *Memo) CreateMemo() (int, error) {
 	id := int(created_id)
 	if err != nil {
 		return 0, fmt.Errorf("createMemo: %v", err)
+	}
+
+	for _, tag := range tags {
+		tag_id, err := tag.CreateTag()
+		if err != nil {
+			return 0, fmt.Errorf("createTag: %v", err)
+		}
+		_, _ = CreateTagMap(tag_id, memo.Id)
+
 	}
 	return id, nil
 }
