@@ -1,13 +1,6 @@
-import Header from './components/header'
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import { renderToHTML } from 'next/dist/server/render'
 import { useState } from 'react';
 import useSWR from 'swr';
-
-const inter = Inter({ subsets: ['latin'] })
 
 type Memo = {
   title :string,
@@ -34,7 +27,7 @@ export default function MemoView(): JSX.Element {
       title : "memo2",
       author: "user5",
       body: "this is body of memo2.\n and this is second line.\n and this is third line.",
-      filepath: "./sample.pdf",
+      filepath: "",
       id: 2,
       date: "2023-06-1",
       tags: [ "tagB", "tagD" ,"tagC"]
@@ -99,7 +92,7 @@ function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
       <div className='author'>
         <h2> Author : {memo.author} </h2>
       </div>
-      <PreviewThm filepath={memo.filepath} />
+      <PreviewDoc filepath={memo.filepath} />
       <div className='body'>
         { memo.body.split("\n").map((e) => <div>{e}</div>) }
       </div>
@@ -114,7 +107,7 @@ function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
   );
 }
 
-function PreviewThm({filepath}:{filepath:string}): JSX.Element{
+function PreviewDoc({filepath}:{filepath:string}): JSX.Element{
   if(filepath===""){ return <></>; }
 
   const fetcher = (url:string) => fetch(url).then(r => r.blob())
@@ -124,9 +117,17 @@ function PreviewThm({filepath}:{filepath:string}): JSX.Element{
   if(isLoading) return <div>loading...</div>;
 
   if(data==null) return <></>;
+  // if(data.type==="application/pdf"){
+  //   return(
+  //     <div>
+  //       <canvas id='pdf-canvas'>
+  //       </canvas>
+  //     </div>
+  //   );
+  // }
   return(
     <div>
-      <iframe id='inlineDoc' title='Inline image or PDF' className='w-100' src={URL.createObjectURL(data)}/>
+      <iframe id='inlineDoc' title='Inline image' className='w-100' src={URL.createObjectURL(data)}/>
       {/* PDFはこのままでは見ずらい PDF.js? */}
     </div>
   );
