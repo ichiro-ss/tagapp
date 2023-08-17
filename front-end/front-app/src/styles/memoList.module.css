@@ -1,0 +1,133 @@
+.memoList {
+    position: fixed;
+    top: 50px;
+    left: 250px;
+    background-color: #ffffff;
+    color: #c1c1c1;
+    border: 1px solid #c1c1c1;
+    border-radius: 30px;
+    height: 700px;
+    width: 800px;
+    display: flex;
+    flex-wrap: wrap; /* コンテナが横に並び、行が途切れたら折り返す */
+    align-items: flex-start; /* 左寄せに配置 */
+    align-content: flex-start; /* 上寄せに配置 */
+    padding-top: 30px; /* 上部の余白を追加 */
+    padding-bottom: 30px; /* 下部の余白を追加 */
+    overflow-y: auto; /* 垂直方向のスクロールバーを表示 */
+    /* カスタムスクロールバースタイル */
+    scrollbar-width: thin; /* スクロールバーの太さを設定 */
+    scrollbar-color: #888888 #f4f4f4; /* スクロールバーカラーを設定 */
+}
+
+/* スクロールバーのスタイルを定義 */
+.memoList::-webkit-scrollbar {
+    width: 6px; /* スクロールバーの幅を設定 */
+    height: 500px;
+}
+  
+.memoList::-webkit-scrollbar-track {
+    background: #FFFFFF; /* スクロールバートラックの背景色を設定 */
+    background: rgba(0,0,0,0);
+}
+  
+.memoList::-webkit-scrollbar-thumb {
+    background-color: #888888; /* スクロールバーの背景色を設定 */
+    border-radius: 3px; /* スクロールバーサムの角を丸く設定 */
+    border: none; /* スクロールバーの枠線を設定 */
+}
+
+.memoButton {
+    /* display: block; */
+    border: none;
+    margin: 0px;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column; /* コンテンツを縦方向に配置 */
+    align-items: flex-start; /* 左寄せに配置 */
+}
+
+.memoContainer{
+    background-color: #ffffff;
+    color: #c1c1c1;
+    border: 1px solid #c1c1c1;
+    border-radius: 30px;
+    height: 190px;
+    width: 230px;
+    margin: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column; /* コンテンツを縦方向に配置 */
+    align-items: flex-start; /* 左寄せに配置 */
+    transition: background-color 0.3s ease-in-out; /* トランジションを追加 */
+}
+
+.memoContainer:hover { /* カーソルを合わせたときのスタイルを追加 */
+    background-color: #E9E9E9;
+  }
+  
+  
+.memoTitle {
+    font-size: 20px;
+    /* font-style: italic; */
+    color: #808080;
+}
+  
+.memoTags {
+    font-size: 16px;
+    color: #808080;
+}
+  
+.memoComment {
+    font-size: 16px;
+    color: #808080;
+    margin-top: 5px;
+    text-align: left; /* 左揃えにするために追加 */
+}
+  
+.memoDate {
+    font-size: 16px;
+    color: #808080;
+    margin-bottom: 0;
+}
+
+
+/* .selectedMemoContainer {
+    background-color: #ffffff;
+    color: #c1c1c1;
+    border: 1px solid #c1c1c1;
+    border-radius: 30px;
+    height: 734px;
+    width: 360px;
+    flex: 1;
+} */
+
+.searchResult {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    font-size: 16px;
+    color: #808080;
+}
+
+.sortFormat {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    font-size: 16px;
+    color: #808080;
+}
+
+.displayFormat {
+    position: fixed;
+    bottom: 0;
+    left: 200;
+    padding: 10px;
+    font-size: 16px;
+    color: #808080;
+    /* background-color: #FFFFFF; */
+}
