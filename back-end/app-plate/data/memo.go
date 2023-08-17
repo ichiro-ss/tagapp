@@ -84,7 +84,7 @@ func MemoByUser(user_id int) ([]Memo, error) {
 // MemoのTagNameによる取得関数
 func MemoByTag(tag_name string, user_id string) ([]Memo, error) {
 	var memos []Memo
-	rows, err := db.Query("SELECT memo.id, memo.title, memo.userId, memo.content, memo.createdAt, memo.picPath FROM memo INNER JOIN tag_map ON memo.id = tag_map.memoId INNER JOIN tag ON tag_map.tagId = tag.id WHERE tagName=?", tag_name)
+	rows, err := db.Query("SELECT memo.id, memo.title, memo.userId, memo.content, memo.createdAt, memo.picPath FROM memo INNER JOIN tag_map ON memo.id = tag_map.memoId INNER JOIN tag ON tag_map.tagId = tag.id WHERE tagName=? and memo.userId=?", tag_name, user_id)
 	if err != nil {
 		return nil, fmt.Errorf("memosByTag %s: %v", tag_name, err)
 	}
