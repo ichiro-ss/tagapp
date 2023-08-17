@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"app-plate/data"
 	"app-plate/lib"
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -139,23 +141,22 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//<------variable region---------
-	// userName := params.userName
-	// memoTitle := params.memoTitle
-	// memoContent := params.memoContent
+	userName := params.userName
+	memoTitle := params.memoTitle
+	memoContent := params.memoContent
 	// tagsId := params.tagsId
-	// date := params.date
+	date := params.date
 	thumbnail := params.thumbnail
-	//-------variable region-------->
 
 	gbsession := lib.GetGlobalSessions()
 	sess := gbsession.SessionStart(w, r)
 	sessUser := lib.GetSessionUser(&sess)
+	var imgpath string
+	//-------variable region-------->
 
 	if sessUser == nil || sessUser.Id != params.userName {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("不正なPostリクエストです"))
-		fmt.Println("prams:userName:", params.userName)
-		fmt.Println("sessUser.Id:", sessUser.Id)
 		return
 	}
 
@@ -166,23 +167,43 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dir := makeUserImageFokdaPath(params.userName)
-	fname := makePostImageFname()
+	if thumbnail != nil {
+		dir := makeUserImageFokdaPath(params.userName)
+		fname := makePostImageFname()
+		imgpath, err = thumbnail.Save(dir, fname)
 
-	fmt.Println("dir : ", dir)
-	fmt.Println("fname : ", fname)
-
-	err = thumbnail.Save(dir, fname)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Imageを保存できませんでした"))
-		return
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("Imageを保存できませんでした"))
+			return
+		}
+	} else {
+		imgpath = PIC_PATH_UNDFINED_VALUE
 	}
 
 	//<--------投稿のデータベースクリエイト領域----------
+	memoData := data.Memo{
+		Title:     memoTitle,
+		UserId:    userName,
+		Content:   memoContent,
+		CreatedAt: *date,
+		PicPath:   imgpath,
+	}
 
+	memoId, err := memoData.CreateMemo()
+	memoData.Id = memoId
+
+	if err != nil {
+		lib.RemoveFile(imgpath)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Memoデータを保存できませんでした"))
+		return
+	}
 	//---------投稿のデータベースクリエイト領域--------->
+
+	//<---------タグマップのデータベースクリエイト領域---------
+
+	//----------タグマップのデータベースクリエイト領域--------->
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -196,48 +217,129 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//<------variable region---------
-	// userName := params.userName
-	// memoTitle := params.memoTitle
-	// memoContent := params.memoContent
+	memoTitle := params.memoTitle
+	memoContent := params.memoContent
 	// tagsId := params.tagsId
-	// date := params.date
-	// thumbnail := params.thumbnail
-	//-------variable region-------->
+	thumbnail := params.thumbnail
+	memoId := params.memoId
 
 	gbsession := lib.GetGlobalSessions()
 	sess := gbsession.SessionStart(w, r)
 	sessUser := lib.GetSessionUser(&sess)
+	//-------variable region-------->
 
 	//<--------投稿のデータベース取得領域---------------
+	memoData, err := data.MemoByID(memoId)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Memoデータが存在しません"))
+		return
+	}
+
+	if sessUser.Id != memoData.UserId {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("不正なPUTリクエストです"))
+		return
+	}
 
 	//---------投稿のデータベース取得領域-------------->
 
 	//<--------投稿のデータベースアップデート領域----------
+	memoData.Title = memoTitle
+	memoData.Content = memoContent
 
-	//---------投稿のデータベースアップデート領域--------->
+	if thumbnail != nil {
+		if memoData.PicPath == PIC_PATH_UNDFINED_VALUE {
+			dir := makeUserImageFokdaPath(params.userName)
+			fname := makePostImageFname()
+			imgpath, err := thumbnail.Save(dir, fname)
 
-	if sessUser == nil || sessUser.Id != params.userName {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("不正なPostリクエストです"))
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("不正なPUTリクエストです"))
+				return
+			}
+
+			memoData.PicPath = imgpath
+		} else {
+			imgpath := memoData.PicPath
+			err = lib.RemoveFile(imgpath)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("サムネイル画像の削除に失敗しました"))
+				return
+			}
+
+			dir, fname := filepath.Split(imgpath)
+			fname = lib.RemoveExtension(fname)
+
+			imgpath, err = thumbnail.Save(dir, fname)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("サムネイル画像の保存に失敗しました"))
+				return
+			}
+			memoData.PicPath = imgpath
+		}
+	}
+
+	err = memoData.UpdateMemo()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Memoデータの更新に失敗しました"))
 		return
 	}
 
+	//---------投稿のデータベースアップデート領域--------->
+
+	//<--------タグのデータベースアップデート領域----------
+
+	//---------タグのデータベースアップデート領域--------->
+
+	w.WriteHeader(http.StatusOK)
+	return
 }
 
 // 未完成
 func memoDeleteHandle(w http.ResponseWriter, r *http.Request) {
-	// var err error
-	r.ParseForm()
+	var err error
+	params, isCollectParams := parseMemoRequestParams(w, r)
+	if !isCollectParams {
+		return
+	}
 
-	//<------variable region---------
-	// userName := params.userName
-	// memoId := params.memoI
-	//-------variable region-------->
+	// <------variable region---------
+	memoId := params.memoId
+
+	gbsession := lib.GetGlobalSessions()
+	sess := gbsession.SessionStart(w, r)
+	sessUser := lib.GetSessionUser(&sess)
+	// -------variable region-------->
 
 	//<--------投稿のデータベース取得領域---------------
+	memoData, err := data.MemoByID(memoId)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("該当のメモは存在しません"))
+		return
+	}
 
+	if sessUser.Id != memoData.UserId {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("不正なDELETEリクエストです"))
+		return
+	}
+
+	err = memoData.DeleteMemo()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Memoデータの削除に失敗しました"))
+		return
+	}
 	//---------投稿のデータベース取得領域-------------->
 
+	w.WriteHeader(http.StatusOK)
+	return
 }
 
 func memoGetHandle(w http.ResponseWriter, r *http.Request) {
@@ -256,10 +358,19 @@ func memoGetHandle(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("/api/memo Get : memoId=", memoid)
 
 	//<--------投稿のデータベース取得領域---------------
-
+	memoData, err := data.MemoByID(memoid)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("該当のメモは存在しません"))
+		return
+	}
 	//---------投稿のデータベース取得領域-------------->
 
-	w.WriteHeader(http.StatusOK)
+	err = setJsonData(w, r, memoData)
+	if err != nil {
+		return
+	}
+
 	return
 }
 
