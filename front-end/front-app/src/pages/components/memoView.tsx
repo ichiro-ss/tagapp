@@ -13,7 +13,7 @@ type Memo = {
 };
 
 export default function MemoView(): JSX.Element {
-  const memoAry=[
+  const sampleMemoAry=[
     {
       title : "memo1",
       author: "user0",
@@ -53,7 +53,7 @@ export default function MemoView(): JSX.Element {
             <MemoSelector handler={setReadingMemo} />
           </div>
           <div className="right-column col-6 h-100 border border-warning overflow-auto">
-            <MemoDetailedView memo={memoAry[readingMemo]}/>
+            <MemoDetailedView memo={sampleMemoAry[readingMemo]}/>
           </div>
         </div>
       </div>
