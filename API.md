@@ -43,7 +43,9 @@ Body : ログインできたユーザの情報をもつ json
 Header : 対応するBadステータス<br>
 Body : errorMessageを含む json
 
-### GETメソッド(POST, PUTメソッド以外)
+<br>
+
+#### GETメソッド(POST, PUTメソッド以外)
 現在ログインしているユーザを取得します。<br>
 
 - ログインしている場合<br>
