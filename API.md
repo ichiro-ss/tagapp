@@ -20,7 +20,7 @@
 ### 仕様
 いずれのメソッドも、application/x-www-form-urlencodedを前提としています
 
-#### PUSHメソッド
+#### POSTメソッド
 指定したパラメータでアカウントの作成を行います。<Br>
 
  - アカウントを作成できた場合:<br>
@@ -33,7 +33,7 @@
 
 <br>
 
-#### GETメソッド(PUSHメソッド以外)
+#### PUTメソッド
 指定したパラメータでログインを行います。<br>
 - ログインできた場合<br>
 Header : 200ステータス<br>
@@ -42,6 +42,19 @@ Body : ログインできたユーザの情報をもつ json
 - ログインできなかった場合<br>
 Header : 対応するBadステータス<br>
 Body : errorMessageを含む json
+
+<br>
+
+#### GETメソッド(POST, PUTメソッド以外)
+現在ログインしているユーザを取得します。<br>
+
+- ログインしている場合<br>
+Header : 200ステータス<br>
+Body : ログインしているユーザの情報をもつjson
+
+- ログインしていない場合<br>
+Header : 対応するBadステータス<br>
+Body : errorMessageを含ふjson
 
 ## ログアウト関係
 
