@@ -2,6 +2,7 @@ import { error } from "console"
 import Header from "../components/header"
 import { Back_Index } from "../constants"
 import { FormEvent } from "react"
+import  Link  from "next/link"
 
 const formDatatoURLSerachParams = (formData: FormData): URLSearchParams => {
     const params: [string, string][] = []
@@ -90,7 +91,7 @@ export default function Home() {
                 return res.json()
             })
             .then((data) => {
-                console.log("josn:", data)
+                console.log("json:", data)
             })
             .catch(error => {
                 console.log("Error")
@@ -130,6 +131,9 @@ export default function Home() {
                 <button type="button" className="btn btn-primary" onClick={onGetUserBtn}>Get User</button>
                 <button type="button" className="btn btn-primary" onClick={onLogoutBtn}>Get User</button>
             </form>
+            <Link href="/tests/mymemo">
+            <p>move to mymemo page →</p>
+            </Link>
         </div>
 
     )

@@ -16,12 +16,20 @@ func setHandle() {
 	http.HandleFunc("/print", handler.TestHandlerPrint)
 	http.HandleFunc("/api/login", handler.LoginHandler)
 	http.HandleFunc("/api/logout", handler.LogoutHandler)
+	http.HandleFunc("/api/memo", handler.MemoHandler)
 }
 
 func main() {
 
 	db := data.GetMydb()
 	defer db.Close()
+
+	if db == nil {
+		fmt.Println("Database is nil pointer")
+	}
+	gotest.TestUserData()
+	gotest.TestMemoData()
+	gotest.TestTagData()
 
 	serverURL := "0.0.0.0:5000"
 	server := http.Server{
@@ -31,5 +39,4 @@ func main() {
 	fmt.Println("Start Listen " + serverURL)
 	setHandle()
 	server.ListenAndServe()
-
 }
