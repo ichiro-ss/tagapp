@@ -1,5 +1,5 @@
 import Header from "./components/header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Back_Index } from "./constants";
 import { LeftSideComponent } from "./components/leftsideComponent";
 import MemoList from "./components/memoList";
@@ -11,19 +11,25 @@ export default function Home() {
   const axios = require('axios').default;
   const router = useRouter();
 
-  axios.get('__/api/login__')
+  axios.get(Back_Index+"/api/login")
     .then(
       function (r:any):void{
         if(r.status===200){
           setIsLoggedIn(true);
+        }else{
+          setIsLoggedIn(false);
         }
-        else router.push("./login");
       }
-    ).catch( (error:any) =>{ 
+    ).catch( (error:any) =>{
+      setIsLoggedIn(false);
       console.log("error");
-      router.push("./login");
     }
   )
+
+  useEffect( ()=>{
+    if(isLoggedIn!=null && !isLoggedIn) router.push("/login");
+  }, [isLoggedIn]
+  );
   
   if(isLoggedIn==undefined){
     return <>Loading...</>;
@@ -46,7 +52,7 @@ export default function Home() {
     );
   }
   else{
-    return <></>;
+    return <>Failed</>;
   }
 
 }
