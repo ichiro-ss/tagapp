@@ -95,6 +95,28 @@ func TestMemoData() {
 	}
 	fmt.Printf("Memo%dのtagは%sです\n", memo1.Id, tag_names)
 
+	new_tag := data.Tag{Id: 5, TagName: "e", UserId: userId, MemoNum: 1}
+	fmt.Printf("Memo%dのtagにeを追加します\n", memo1.Id)
+	err = memo1.CreateMemoTag(new_tag)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	fmt.Printf("Memo%dのtagからeを削除します\n", memo1.Id)
+	err = memo1.DeleteMemoTag(new_tag)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	tag_names, err = data.TagNameByMemo(memo1.Id)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("Memo%dのtagは%sです\n", memo1.Id, tag_names)
+
 	fmt.Println("Memoの取得開始")
 	new_memo, err := data.MemoByID(memo1.Id)
 	if err != nil {
@@ -153,10 +175,10 @@ func TestTagData() {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("Tag%dの作成に成功しました", addedid)
+	fmt.Printf("Tag%dの作成に成功しました\n", addedid)
 
 	fmt.Println("Tagの取得開始")
-	new_tag, err := data.TagByID(id)
+	new_tag, err := data.TagByID(tag.Id)
 	if err != nil {
 		log.Fatal(err)
 		return

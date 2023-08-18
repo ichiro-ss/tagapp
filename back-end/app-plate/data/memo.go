@@ -103,6 +103,32 @@ func MemoByTag(tag_name string, user_id string) ([]Memo, error) {
 	return memos, nil
 }
 
+func (memo *Memo) CreateMemoTag(tag Tag) error {
+	tag_id, err := tag.CreateTag()
+	if err != nil {
+		return fmt.Errorf("createTag: %v", err)
+	}
+	tag.Id = int(tag_id)
+	_, _ = CreateTagMap(tag.Id, memo.Id)
+
+	return nil
+}
+
+func (memo *Memo) DeleteMemoTag(tag Tag) error {
+	tag.MemoNum--
+	err := tag.UpdateTag()
+	if err != nil {
+		return fmt.Errorf("DeleteMemoTag: %v", err)
+	}
+	_, err = mydb.Exec(
+		"DELETE FROM tag_map WHERE tagId=? and memoId=?", tag.Id, memo.Id,
+	)
+	if err != nil {
+		return fmt.Errorf("deleteMemoTag: %v", err)
+	}
+	return nil
+}
+
 // Memoの更新関数
 func (memo *Memo) UpdateMemo() error {
 	_, err := mydb.Exec(
