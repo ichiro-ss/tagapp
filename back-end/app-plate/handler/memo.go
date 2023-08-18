@@ -89,7 +89,7 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 	userName := r.FormValue("username")
 	memoTitle := r.FormValue("memotitle")
 	memoContent := r.FormValue("memocontent")
-	tagsIdStr := r.Form["tags"]
+	tagsNameStr := r.Form["tags"]
 	thumbnailFile, _, err := r.FormFile("thumbnail")
 	memoIdStr := r.FormValue("memoid")
 	timeIso := r.FormValue("dateiso")
@@ -108,7 +108,7 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 		}
 	}
 
-	for _, value := range tagsIdStr {
+	for _, value := range tagsNameStr {
 		trimtag := strings.TrimSpace(value)
 		tags = append(tags, trimtag)
 	}

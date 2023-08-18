@@ -39,7 +39,7 @@ export default function Home() {
         const formData: FormData = new FormData(form)
 
         formData.append("tags", "ATRI")
-        formData.append("tags", "かわいい")
+        formData.append("tags", "")
         formData.append("username", userId)
         formData.append("dateiso", date.toISOString())
         console.log("username:",userId)
