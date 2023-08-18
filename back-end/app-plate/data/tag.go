@@ -28,7 +28,7 @@ func (tag *Tag) CreateTag() (int, error) {
 		if err == sql.ErrNoRows {
 			result, err := mydb.Exec(
 				"INSERT INTO tag (tagName, userId, memosNum) VALUES (?, ?, ?)",
-				tag.TagName, tag.UserId, tag.MemoNum,
+				tag.TagName, tag.UserId, 1,
 			)
 			if err != nil {
 				return 0, fmt.Errorf("createTag: %v", err)
@@ -40,6 +40,11 @@ func (tag *Tag) CreateTag() (int, error) {
 			}
 			return id, nil
 		}
+	}
+	tag.MemoNum++
+	err := tag.UpdateTag()
+	if err != nil {
+		return tag.Id, fmt.Errorf("CreateTag: %v", err)
 	}
 	fmt.Printf("Tag%dを作成", tag.Id)
 	return tag.Id, nil
