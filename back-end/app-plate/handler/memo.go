@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -36,12 +37,27 @@ func makeUserImageFolda(userId string) error {
 	return nil
 }
 
+func makeUserTagArray(tagNames []string, userName string) []data.Tag {
+	tagDatas := []data.Tag{}
+
+	for _, tagName := range tagNames {
+		trimName := strings.TrimSpace(tagName)
+		tagData := data.Tag{
+			UserId:  userName,
+			TagName: trimName,
+		}
+		tagDatas = append(tagDatas, tagData)
+	}
+
+	return tagDatas
+}
+
 type apiMemoParams struct {
 	userName    string
 	memoTitle   string
 	memoContent string
 	memoId      int
-	tagsId      []int
+	tags        []string
 	date        *time.Time
 	thumbnail   *lib.GoImg
 }
@@ -51,7 +67,7 @@ func (params *apiMemoParams) print() {
 	fmt.Println("memoTitle:", params.memoTitle)
 	fmt.Println("memoContent:", params.memoContent)
 	fmt.Println("memoId:", params.memoId)
-	fmt.Println("tagsId:", params.tagsId)
+	fmt.Println("tagsId:", params.tags)
 	if params.date != nil {
 		fmt.Println("date:", *params.date)
 	}
@@ -79,7 +95,7 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 	timeIso := r.FormValue("dateiso")
 
 	var thumbnail *lib.GoImg
-	var tagsId []int
+	var tags []string
 	var memoId int
 	var datep *time.Time
 	thumbnail = nil
@@ -93,15 +109,20 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 	}
 
 	for _, value := range tagsIdStr {
-		ivalue, err := strconv.Atoi(value)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("`tags`に不正な値が存在します"))
-			isCollectParams = false
-			return
-		}
-		tagsId = append(tagsId, ivalue)
+		trimtag := strings.TrimSpace(value)
+		tags = append(tags, trimtag)
 	}
+
+	// for _, value := range tagsIdStr {
+	// 	ivalue, err := strconv.Atoi(value)
+	// 	if err != nil {
+	// 		w.WriteHeader(http.StatusBadRequest)
+	// 		w.Write([]byte("`tags`に不正な値が存在します"))
+	// 		isCollectParams = false
+	// 		return
+	// 	}
+	// 	tagsId = append(tagsId, ivalue)
+	// }
 
 	memoId = -1
 	memoId, err = strconv.Atoi(memoIdStr)
@@ -127,7 +148,7 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 	params.memoTitle = memoTitle
 	params.memoContent = memoContent
 	params.thumbnail = thumbnail
-	params.tagsId = tagsId
+	params.tags = tags
 	params.memoId = memoId
 	params.date = datep
 
@@ -148,7 +169,7 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 	userName := params.userName
 	memoTitle := params.memoTitle
 	memoContent := params.memoContent
-	// tagsId := params.tagsId
+	tags := params.tags
 	date := params.date
 	thumbnail := params.thumbnail
 
@@ -194,7 +215,9 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 		PicPath:   imgpath,
 	}
 
-	memoId, err := memoData.CreateMemo()
+	tagDatas := makeUserTagArray(tags, userName)
+
+	memoId, err := memoData.CreateMemo(tagDatas)
 	memoData.Id = memoId
 
 	if err != nil {
@@ -204,10 +227,6 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//---------投稿のデータベースクリエイト領域--------->
-
-	//<---------タグマップのデータベースクリエイト領域---------
-
-	//----------タグマップのデータベースクリエイト領域--------->
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -352,15 +371,16 @@ func memoDeleteHandle(w http.ResponseWriter, r *http.Request) {
 	}
 	//---------投稿のデータベース取得&削除領域-------------->
 
-	//<---------タグのデータベース削除領域--------------
-
-	//---------タグのデータベース削除領域-------------->
-
 	w.WriteHeader(http.StatusOK)
 	return
 }
 
 func memoGetHandle(w http.ResponseWriter, r *http.Request) {
+	type memoJsonStruct struct {
+		Memo data.Memo `json:"memo"`
+		Tags []string  `json:"tags"`
+	}
+
 	var err error
 	r.ParseForm()
 
@@ -385,10 +405,22 @@ func memoGetHandle(w http.ResponseWriter, r *http.Request) {
 	//---------投稿のデータベース取得領域-------------->
 
 	//<--------タグのデータベース取得領域---------------
+	tagNames, err := data.TagNameByMemo(memoData.Id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("タグを取得することができませんでした"))
+		return
+	}
+	fmt.Println("tagName=", tagNames)
 
 	//--------タグのデータベース取得領域--------------->
 
-	err = setJsonData(w, r, memoData)
+	memoJson := memoJsonStruct{
+		Memo: memoData,
+		Tags: tagNames,
+	}
+
+	err = setJsonData(w, r, memoJson)
 	if err != nil {
 		return
 	}

@@ -38,8 +38,8 @@ export default function Home() {
         const form: HTMLFormElement = e.target.closest("form") as HTMLFormElement;
         const formData: FormData = new FormData(form)
 
-        formData.append("tags", "125")
-        formData.append("tags", "1356")
+        formData.append("tags", "ATRI")
+        formData.append("tags", "かわいい")
         formData.append("username", userId)
         formData.append("dateiso", date.toISOString())
         console.log("username:",userId)

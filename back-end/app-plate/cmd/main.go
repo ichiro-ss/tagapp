@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"app-plate/data"
-	"app-plate/gotest"
 	"app-plate/handler"
 
 	_ "app-plate/data"
