@@ -15,13 +15,13 @@ func TestUserData() {
 	var err error
 
 	fmt.Println("id:", user.Id, ", pass:", user.Hashpass)
-	// fmt.Println("Userの作成開始")
-	// err = user.Create()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// 	return
-	// }
-	// fmt.Println("Userの作成に成功しました")
+	fmt.Println("Userの作成開始")
+	err = user.Create()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("Userの作成に成功しました")
 
 	fmt.Println("Userの取得開始")
 	user2, err := data.GetUser(id)
