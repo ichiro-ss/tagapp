@@ -45,7 +45,7 @@ export default function Home() {
         console.log("username:",userId)
 
         const req = {
-            method: "PUT",
+            method: "POST",
             body: formData,
         }
 
@@ -64,13 +64,47 @@ export default function Home() {
         })
     }
 
+    const onDeleteBtn = () => {
+        const memoId = 2
+        const url = `${Back_Index}/api/memo?memoid=${memoId}`
+        const req = {
+            method : "DELETE",
+        }
+
+        fetch ( url, makeCROSRequest(req))
+        .then( res => {
+            if ( res.ok ) {
+                console.log("メモの削除に成功しました")
+                return;
+            } else {
+                res.text().then(data => {
+                    console.log(data)
+                })
+                return;
+            }
+        })
+        .catch( err => {
+            console.error(err)
+        })
+    }
+
     const onGetBtn = () => {
-        const memoId = 125
+        const memoId = 1
         const url = `${Back_Index}/api/memo?memoid=${memoId}`
 
         fetch ( url, makeCROSRequest({}))
-        .then( res => 
-            console.log(res))
+        .then( res => {
+            if ( res.ok ) {
+                return res.json()
+            } else {
+                return;
+            }
+            
+        })
+        .then( data => {
+            console.log("メモの取得に成功しました")
+            console.log(data)
+        })
         .catch( err => {
             console.error(err)
         })
@@ -93,12 +127,13 @@ export default function Home() {
                 </div>
                 <div className="form-group mb-3">
                     <label >Memotitle</label>
-                    <textarea className="ml-3 form-control" placeholder="MemoMain" rows={3} name="memomain" onChange={ (e) => handleInputChange(e, setMemoMain)} />
+                    <textarea className="ml-3 form-control" placeholder="MemoMain" rows={3} name="memocontent" onChange={ (e) => handleInputChange(e, setMemoMain)} />
                 </div>
 
                 <p>MemoTitle : {memoTitle}</p>
                 <p>MemoMain : {memoMain}</p>
                 <button type="button" className="btn btn-primary" onClick={OnSubmitEvent}>Submit</button>
+                <button type="button" className="btn btn-primary" onClick={onDeleteBtn}>DeleteMemo</button>
                 <button type="button" className="btn btn-primary" onClick={onGetBtn}>GetMemo</button>
             </form>
             <Link href="/tests/login">

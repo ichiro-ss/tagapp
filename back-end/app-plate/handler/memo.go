@@ -52,8 +52,12 @@ func (params *apiMemoParams) print() {
 	fmt.Println("memoContent:", params.memoContent)
 	fmt.Println("memoId:", params.memoId)
 	fmt.Println("tagsId:", params.tagsId)
-	fmt.Println("date:", *params.date)
-	fmt.Println("thumbnail:", *params.thumbnail)
+	if params.date != nil {
+		fmt.Println("date:", *params.date)
+	}
+	if params.thumbnail != nil {
+		fmt.Println("thumbnail:", *params.thumbnail)
+	}
 }
 
 // apiのリクエストのパラメータの解析
@@ -208,6 +212,7 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// memoの更新API
 // memoデータベースクラスができてから
 func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 	// var err error
@@ -236,7 +241,7 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if sessUser.Id != memoData.UserId {
+	if sessUser == nil || sessUser.Id != memoData.UserId {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("不正なPUTリクエストです"))
 		return
@@ -316,7 +321,7 @@ func memoDeleteHandle(w http.ResponseWriter, r *http.Request) {
 	sessUser := lib.GetSessionUser(&sess)
 	// -------variable region-------->
 
-	//<--------投稿のデータベース取得領域---------------
+	//<--------投稿のデータベース取得&削除領域---------------
 	memoData, err := data.MemoByID(memoId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -324,10 +329,19 @@ func memoDeleteHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if sessUser.Id != memoData.UserId {
+	if sessUser == nil || sessUser.Id != memoData.UserId {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("不正なDELETEリクエストです"))
 		return
+	}
+
+	if memoData.PicPath != PIC_PATH_UNDFINED_VALUE {
+		err = lib.RemoveFile(memoData.PicPath)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("サムネイル画像の削除に失敗しました"))
+			return
+		}
 	}
 
 	err = memoData.DeleteMemo()
@@ -336,7 +350,11 @@ func memoDeleteHandle(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Memoデータの削除に失敗しました"))
 		return
 	}
-	//---------投稿のデータベース取得領域-------------->
+	//---------投稿のデータベース取得&削除領域-------------->
+
+	//<---------タグのデータベース削除領域--------------
+
+	//---------タグのデータベース削除領域-------------->
 
 	w.WriteHeader(http.StatusOK)
 	return
@@ -366,6 +384,10 @@ func memoGetHandle(w http.ResponseWriter, r *http.Request) {
 	}
 	//---------投稿のデータベース取得領域-------------->
 
+	//<--------タグのデータベース取得領域---------------
+
+	//--------タグのデータベース取得領域--------------->
+
 	err = setJsonData(w, r, memoData)
 	if err != nil {
 		return
@@ -384,7 +406,11 @@ func MemoHandler(w http.ResponseWriter, r *http.Request) {
 		memoPostHandle(w, r)
 	case http.MethodGet:
 		memoGetHandle(w, r)
+	case http.MethodDelete:
+		memoDeleteHandle(w, r)
+	case http.MethodPut:
+		memoPutHandle(w, r)
 	default:
-		memoPostHandle(w, r)
+		memoGetHandle(w, r)
 	}
 }
