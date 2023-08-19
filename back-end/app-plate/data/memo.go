@@ -60,7 +60,7 @@ func MemoByID(id int) (Memo, error) {
 }
 
 // MemoのUserIdによる取得関数
-func MemoByUser(user_id int) ([]Memo, error) {
+func MemoByUser(user_id string) ([]Memo, error) {
 	var memos []Memo
 
 	rows, err := db.Query("SELECT * FROM memo WHERE userId = ?", user_id)
@@ -131,15 +131,15 @@ func MemoByTagAND(tag_names []string, user_id string) ([]Memo, error) {
 	return memos, nil
 }
 
-func (memo *Memo) CreateMemoTag(tag Tag) error {
+func (memo *Memo) CreateMemoTag(tag Tag) (int, error) {
 	tag_id, err := tag.CreateTag()
 	if err != nil {
-		return fmt.Errorf("createTag: %v", err)
+		return 0, fmt.Errorf("createTag: %v", err)
 	}
 	tag.Id = int(tag_id)
 	_, _ = CreateTagMap(tag.Id, memo.Id)
 
-	return nil
+	return tag.Id, nil
 }
 
 func (memo *Memo) DeleteMemoTag(tag Tag) error {

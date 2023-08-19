@@ -171,3 +171,43 @@ Header : 対応するBadStatus<br>
 Body : エラーメッセージのテキスト 
 
 <br>
+
+## メモ検索
+メモの検索に関するAPIです。
+
+### エントリポイント： /api/memosearch
+
+ ### 仕様
+ 
+ ### メソッド全種
+ 指定した検索オプションに取得します
+
+ #### パラメータ
+
+ |名前      | 説明               |   
+ | -------- | ------------------ | 
+ | username | 調べるメモの投稿者名(UserName) |  
+ | keywords| 全文検索に使うキーワード |
+ | tags| タグ検索につかうタグの値(文字列)  |  
+ | keywordoption| 全文検索の検索オプション |
+ | tagoption| タグ検索の検索オプション |  
+ | startdate| 日付絞り込みの開始日時(iso規格) |
+ | enddate| 日付絞り込みの終了日時(iso規格) |
+ | pageidx| ページ番号 |
+ | pageItemAmount| 1ページのメモの量 |
+
+ <br>
+
+(※)<br>
+keywordoption, tagoptionは検索のAND, OR, NOTを指定するパラメータです。<br>
+"and", "or", "not"の中から値を指定してください
+
+#### 結果
+
+- リクエストに成功時<br>
+Header : 200<br>
+Body : 検索に合致したメモの配列のjson
+
+- リクエストに失敗時<br>
+Header : 対応するBadStatus<br>
+Body : エラーメッセージのテキスト 
