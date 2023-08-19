@@ -140,6 +140,9 @@ export default function Home() {
             <Link href="/tests/mymemo">
                 <p>move to mymemo page →</p>
             </Link>
+            <Link href="/tests/memosearch">
+                <p>move to memosearch page →</p>
+            </Link>
             <button type="button" className="btn btn-primary" onClick={onLocationBtn}>ページ遷移</button>
         </div>
 
