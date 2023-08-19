@@ -52,6 +52,55 @@ func makeUserTagArray(tagNames []string, userName string) []data.Tag {
 	return tagDatas
 }
 
+func validTagNames(tagNames []string) (valifiedTagNames []string) {
+	valifiedTagNames = []string{}
+	tagNamesSet := make(map[string]bool)
+
+	for _, value := range tagNames {
+		valifiedValue := strings.TrimSpace(value)
+		_, exists := tagNamesSet[valifiedValue]
+		if !exists {
+			valifiedTagNames = append(valifiedTagNames, valifiedValue)
+			tagNamesSet[valifiedValue] = true
+		}
+	}
+
+	return
+}
+
+// タグの編集差異を計算
+func calcDifTagNames(nowTagDatas []data.Tag, newTagNames []string) (deleteTagDatas []data.Tag, createTagNames []string) {
+	deleteTagDatas = []data.Tag{}
+	createTagNames = []string{}
+
+	nowTagsMap := make(map[string]data.Tag)
+	newTagsMap := make(map[string]bool)
+
+	for _, tagData := range nowTagDatas {
+		nowTagsMap[tagData.TagName] = tagData
+	}
+
+	for _, value := range newTagNames {
+		newTagsMap[value] = true
+	}
+
+	for _, value := range nowTagDatas {
+		_, exsits := newTagsMap[value.TagName]
+		if !exsits {
+			deleteTagDatas = append(deleteTagDatas, value)
+		}
+	}
+
+	for _, value := range newTagNames {
+		_, exists := nowTagsMap[value]
+		if !exists {
+			createTagNames = append(createTagNames, value)
+		}
+	}
+
+	return
+}
+
 type apiMemoParams struct {
 	userName    string
 	memoTitle   string
@@ -169,7 +218,7 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 	userName := params.userName
 	memoTitle := params.memoTitle
 	memoContent := params.memoContent
-	tags := params.tags
+	updateTags := params.tags
 	date := params.date
 	thumbnail := params.thumbnail
 
@@ -215,7 +264,7 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 		PicPath:   imgpath,
 	}
 
-	tagDatas := makeUserTagArray(tags, userName)
+	tagDatas := makeUserTagArray(updateTags, userName)
 
 	memoId, err := memoData.CreateMemo(tagDatas)
 	memoData.Id = memoId
@@ -232,7 +281,6 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 // memoの更新API
-// memoデータベースクラスができてから
 func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 	// var err error
 	params, isCollectParams := parseMemoRequestParams(w, r)
@@ -243,7 +291,7 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 	//<------variable region---------
 	memoTitle := params.memoTitle
 	memoContent := params.memoContent
-	// tagsId := params.tagsId
+	updateTags := params.tags
 	thumbnail := params.thumbnail
 	memoId := params.memoId
 
@@ -254,6 +302,8 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 
 	//<--------投稿のデータベース取得領域---------------
 	memoData, err := data.MemoByID(memoId)
+	var memoTagDatas []data.Tag
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Memoデータが存在しません"))
@@ -263,6 +313,14 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 	if sessUser == nil || sessUser.Id != memoData.UserId {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("不正なPUTリクエストです"))
+		return
+	}
+
+	memoTagDatas, err = data.TagsByMemo(memoData.Id)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("タグデータを取得することができませんでした"))
 		return
 	}
 
@@ -311,12 +369,35 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Memoデータの更新に失敗しました"))
+		fmt.Println(err)
 		return
 	}
 
 	//---------投稿のデータベースアップデート領域--------->
 
 	//<--------タグのデータベースアップデート領域----------
+	deletTagDatas, createTagNames := calcDifTagNames(memoTagDatas, updateTags)
+	createTagDatas := makeUserTagArray(createTagNames, memoData.UserId)
+
+	for _, tagData := range deletTagDatas {
+		fmt.Println("Delte: ", tagData)
+		err = memoData.DeleteMemoTag(tagData)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("タグの削除に失敗しました"))
+			return
+		}
+	}
+
+	for _, tagData := range createTagDatas {
+		fmt.Println("Create: ", tagData)
+		memoData.CreateMemoTag(tagData)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("タグの作成に失敗しました"))
+			return
+		}
+	}
 
 	//---------タグのデータベースアップデート領域--------->
 
@@ -411,7 +492,6 @@ func memoGetHandle(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("タグを取得することができませんでした"))
 		return
 	}
-	fmt.Println("tagName=", tagNames)
 
 	//--------タグのデータベース取得領域--------------->
 

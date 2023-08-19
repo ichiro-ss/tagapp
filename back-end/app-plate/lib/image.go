@@ -91,9 +91,9 @@ func LoadImage(path string) (GoImg, error) {
 func (img *GoImg) Save(dir, fname string) (string, error) {
 	switch img.Type {
 	case "png":
-		fname += fname + ".png"
+		fname = fname + ".png"
 	case "jpeg":
-		fname += fname + ".jpg"
+		fname = fname + ".jpg"
 	default:
 		return "", errors.New("Invalid Image File Type")
 	}
