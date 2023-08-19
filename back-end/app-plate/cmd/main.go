@@ -18,7 +18,7 @@ func setHandle() {
 	http.HandleFunc("/api/login", handler.LoginHandler)
 	http.HandleFunc("/api/logout", handler.LogoutHandler)
 	http.HandleFunc("/api/memo", handler.MemoHandler)
-	http.HandleFunc("/api/memoserach", handler.MemoSearchHanlder)
+	http.HandleFunc("/api/memosearch", handler.MemoSearchHanlder)
 }
 
 func main() {
@@ -34,7 +34,6 @@ func main() {
 	server := http.Server{
 		Addr: serverURL,
 	}
-
 	dir, _ := os.Getwd()
 	fmt.Println("dir = ", dir)
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir(dir+"/img/"))))

@@ -10,7 +10,7 @@ const TagToggle: React.FC<TagToggleProps> = ({ onToggle, showTags }) => {
     <div>
       <button 
         onClick={onToggle}
-        style={{ border: "none", background: "none" }} // ボーダーと背景を非表示に
+        style={{ border: "none", background: "none", color: "#808080"}} // ボーダーと背景を非表示に
         >
         {showTags ? "タグ一覧▲" : "タグ一覧▼"}
       </button>
