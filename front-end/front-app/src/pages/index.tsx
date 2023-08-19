@@ -16,6 +16,7 @@ const makeCROSRequest = (request : any) => {
 export default function Home() {
   const title = "TestApp"
   const [isLoggedIn , setIsLoggedIn]=useState<boolean|undefined>(undefined);
+  const [username , setUsername]=useState<string|undefined>(undefined);
   const axios = require('axios').default;
   const router = useRouter();
 
@@ -23,6 +24,7 @@ export default function Home() {
   
   fetch(url,makeCROSRequest({method:'GET'}))
     .then( (res:Response)=>{
+      let resData;
       if(!res.ok){
         console.log("ng");
         setIsLoggedIn(false);
@@ -30,8 +32,8 @@ export default function Home() {
       else{
         console.log("ok");
         setIsLoggedIn(true);
+        res.json().then( data=>{ console.log(data); setUsername(data.id);} );
       }
-      res.json().then((data) => (console.log(data)));
     })
     .catch( (error:Error) =>{
       console.log("Error occurs in API call");
@@ -39,8 +41,9 @@ export default function Home() {
       setIsLoggedIn(false);
   });
 
+  // 開発中は無効化
   useEffect( ()=>{
-    if(isLoggedIn!=null && !isLoggedIn) router.push("/login");
+    // if(isLoggedIn!=null && !isLoggedIn) router.push("/login");
   }, [isLoggedIn]
   );
 

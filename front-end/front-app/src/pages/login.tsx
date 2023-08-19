@@ -1,8 +1,11 @@
 import Header from "./components/header";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Back_Index } from "./constants";
 import { useRouter } from 'next/router'
 import { useForm , SubmitHandler} from "react-hook-form";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
 
 const makeCROSRequest = (request : any) => {
   request.credentials = "include"
@@ -16,6 +19,12 @@ export default function login() {
   const [isLoggedIn, setIsLoggedIn]=useState<boolean|undefined>(undefined);
   const [submitResult, setSubmitResult]=useState<boolean|undefined>(undefined);
   const router=useRouter();
+  const [showLogout, setShowLogout] = useState<boolean>(false);
+  const handleCloseLogout = () => setShowLogout(false);
+  const handleShowLogout = () => setShowLogout(true);
+  const [showSubmit, setShowSubmit] = useState<boolean>(false);
+  const handleCloseSubmit = () => setShowSubmit(false);
+  const handleShowSubmit = () => setShowSubmit(true);
 
   const { register, handleSubmit, setValue , reset} = useForm<{
     uid:string;
@@ -44,7 +53,10 @@ export default function login() {
             console.log("Submittion fail");
             res.json().then((data) => (console.log(data)));
           }
-          else console.log("Submittion success");
+          else{
+            console.log("Submittion success");
+            handleShowSubmit();
+          }
         })
         .catch( (error:Error) =>{
           console.log("Error occurs in submit");
@@ -96,15 +108,40 @@ export default function login() {
             <button type="button" className="btn btn-primary me-2" onClick={ ()=>{
               fetch(Back_Index+'/api/login',makeCROSRequest({method:"GET"})).then( (res:any)=>{
                 if(res.status!==200){ console.log("get fail"); }
-                res.json().then( data=>console.log(data) )
+                res.json().then( (data:any)=>console.log(data) )
             })}}>GET</button>
             <button type="button" className="btn btn-primary me-2" onClick={ ()=>{
               fetch(Back_Index+'/api/logout',makeCROSRequest({method:"GET"})).then( (res:any)=>{
                 if(res.status!==200){ console.log("logout fail"); }
+                else{ handleShowLogout(); }
             })}}>Logout</button>
           </div>
         </form>
       </div>
+      <Modal show={showLogout}>
+          {/* <Modal.Header closeButton>
+            <Modal.Title>Notice</Modal.Title>
+          </Modal.Header> */}
+        <Modal.Body>
+          <h3>Logout</h3><br/>
+          <Button variant="secondary" onClick={handleCloseLogout}>
+              Close
+          </Button>
+        </Modal.Body>
+        {/* <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseLogout}>
+            Close
+          </Button>
+        </Modal.Footer> */}
+      </Modal>
+      <Modal show={showSubmit}>
+        <Modal.Body>
+          <h3>Submit success!!</h3><br/>
+          <Button variant="primary" onClick={handleCloseLogout}>
+            close
+          </Button>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
