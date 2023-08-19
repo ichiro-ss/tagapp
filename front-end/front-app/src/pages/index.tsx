@@ -11,7 +11,13 @@ export default function Home() {
   const axios = require('axios').default;
   const router = useRouter();
 
-  axios.get(Back_Index+"/api/login")
+  axios.get(Back_Index+"/api/login",{
+    withCredentials:true,
+    creadentials:"include",
+    headers: {
+      "Access-Control-Allow-Credentials": "true",
+    }
+  })
     .then(
       function (r:any):void{
         if(r.status===200){
@@ -30,10 +36,11 @@ export default function Home() {
     if(isLoggedIn!=null && !isLoggedIn) router.push("/login");
   }, [isLoggedIn]
   );
-  
+
   if(isLoggedIn==undefined){
     return <>Loading...</>;
   }
+  
 
   if(isLoggedIn){
     return (
