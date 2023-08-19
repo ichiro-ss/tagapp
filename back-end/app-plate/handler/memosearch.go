@@ -4,6 +4,7 @@ import (
 	"app-plate/data"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -66,7 +67,7 @@ func makeMemoSearchJsonMemoStruct(memo data.Memo) (apiMemoSearchJsonMemo, error)
 
 func isMatchTags(targets, matcher []string, opt option) bool {
 	and := makeAndOption()
-	// or := makeOrOption()
+	or := makeOrOption()
 	not := makeNotOption()
 
 	var strMap = make(map[string]bool)
@@ -84,7 +85,7 @@ func isMatchTags(targets, matcher []string, opt option) bool {
 		return true
 	}
 
-	if opt.isSame(&and) {
+	if opt.isSame(&or) {
 		for _, matchtag := range matcher {
 			_, exists := strMap[matchtag]
 			if exists {
@@ -99,6 +100,68 @@ func isMatchTags(targets, matcher []string, opt option) bool {
 			_, exists := strMap[matchtag]
 			if exists {
 				return false
+			}
+		}
+		return true
+	}
+
+	return false
+}
+
+func isMatchKeyword(keywords []string, memoJson *apiMemoSearchJsonMemo, opt option) bool {
+	if len(keywords) == 0 {
+		return true
+	}
+
+	var targets []string
+	for _, value := range memoJson.tags {
+		targets = append(targets, value)
+	}
+	targets = append(targets, memoJson.memo.Title)
+	targets = append(targets, memoJson.memo.Content)
+
+	and := makeAndOption()
+	or := makeOrOption()
+	not := makeNotOption()
+
+	if opt.isSame(&and) {
+		for _, keyword := range keywords {
+			isInclude := false
+			for _, target := range targets {
+				if strings.Contains(target, keyword) {
+					isInclude = true
+					break
+				}
+			}
+			if !isInclude {
+				return false
+			}
+		}
+		return true
+	}
+
+	if opt.isSame(&or) {
+		for _, keyword := range keywords {
+			isInclude := false
+			for _, target := range targets {
+				if strings.Contains(target, keyword) {
+					isInclude = true
+					break
+				}
+			}
+			if isInclude {
+				return true
+			}
+		}
+		return false
+	}
+
+	if opt.isSame(&not) {
+		for _, keyword := range keywords {
+			for _, target := range targets {
+				if strings.Contains(target, keyword) {
+					return false
+				}
 			}
 		}
 		return true
@@ -225,7 +288,120 @@ func memoSearchByUserName(userName string) ([]apiMemoSearchJsonMemo, error) {
 	return results, nil
 }
 
-func memoSearchByTagName()
+func memoSearchByTagName(tagNames []string, memoJsons []apiMemoSearchJsonMemo, tagOpt option) []apiMemoSearchJsonMemo {
+	var results []apiMemoSearchJsonMemo
+	if len(tagNames) == 0 {
+		return memoJsons
+	}
+
+	for _, memo := range memoJsons {
+		if isMatchTags(memo.tags, tagNames, tagOpt) {
+			results = append(results, memo)
+		}
+	}
+	return results
+}
+
+func memoSearchByKeywords(keywords []string, memoJsons []apiMemoSearchJsonMemo, opt option) []apiMemoSearchJsonMemo {
+	var results []apiMemoSearchJsonMemo
+	if len(keywords) == 0 {
+		return memoJsons
+	}
+
+	for _, memo := range memoJsons {
+		if isMatchKeyword(keywords, &memo, opt) {
+			results = append(results, memo)
+		}
+	}
+	return results
+}
+
+func memoSearchByDate(startDate, endDate *time.Time, memoJsons []apiMemoSearchJsonMemo) []apiMemoSearchJsonMemo {
+	var results []apiMemoSearchJsonMemo
+
+	results = memoJsons
+	if startDate != nil {
+		var tmp []apiMemoSearchJsonMemo
+		for _, memoJson := range memoJsons {
+			if startDate.Before(memoJson.memo.CreatedAt) {
+				tmp = append(tmp, memoJson)
+			}
+		}
+		results = tmp
+	}
+
+	if endDate != nil {
+		var tmp []apiMemoSearchJsonMemo
+		for _, memoJson := range memoJsons {
+			if endDate.After(memoJson.memo.CreatedAt) {
+				tmp = append(tmp, memoJson)
+			}
+		}
+		results = tmp
+	}
+
+	return results
+}
+
+func searchMemoWithParam(params *apiMemoSearchParams) []apiMemoSearchJsonMemo {
+	var err error
+	var results []apiMemoSearchJsonMemo
+
+	results, err = memoSearchByUserName(params.UserName)
+
+	if err != nil {
+		return results
+	}
+
+	//タグでの検索
+	results = memoSearchByTagName(params.Tags, results, params.TagOption)
+	//全文検索
+	results = memoSearchByKeywords(params.Keywords, results, params.KeywordOption)
+
+	//日付絞り込み
+	results = memoSearchByDate(params.StartDate, params.EndDate, results)
+
+	return results
+}
+
+func searchMemoByIndex(pageIndex, pageItemAmount int, memoJsons []apiMemoSearchJsonMemo) []apiMemoSearchJsonMemo {
+	var results []apiMemoSearchJsonMemo
+	if pageIndex <= 0 {
+		return results
+	}
+
+	size := len(memoJsons)
+	startIndex := (pageIndex - 1) * pageItemAmount
+
+	if size <= startIndex {
+		return results
+	}
+
+	endIndex := (pageIndex) * pageItemAmount
+	if size <= endIndex {
+		endIndex = size
+	}
+
+	return results[startIndex:endIndex]
+}
+
+func searchMemoHandle(w http.ResponseWriter, r *http.Request) {
+	var err error
+	params, isCollectParams := parseMemoSearchParams(w, r)
+	if !isCollectParams {
+		return
+	}
+
+	results := searchMemoWithParam(&params)
+	results = searchMemoByIndex(params.PageIdx, params.PageItemAmount, results)
+
+	err = setJsonData(w, r, results)
+	if err != nil {
+		return
+	}
+
+	return
+}
 
 // func memoSearch
 // 全文検索は、タグの一部も引っかかる
@@ -234,7 +410,5 @@ func MemoSearchHanlder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	switch r.Method {
-
-	}
+	searchMemoHandle(w, r)
 }
