@@ -34,7 +34,6 @@ func main() {
 	server := http.Server{
 		Addr: serverURL,
 	}
-
 	dir, _ := os.Getwd()
 	fmt.Println("dir = ", dir)
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir(dir+"/img/"))))
