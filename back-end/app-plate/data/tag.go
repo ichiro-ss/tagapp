@@ -125,6 +125,30 @@ func TagNameByMemo(memo_id int) ([]string, error) {
 	return tag_names, nil
 }
 
+// メモのIdからタグオブジェクトの配列を取得
+func TagsByMemo(memo_id int) ([]Tag, error) {
+	var tags []Tag
+
+	rows, err := db.Query("SELECT tagName, tag.id, userId, memosNum FROM tag INNER JOIN tag_map ON tag.id=tag_map.tagId WHERE memoId = ?", memo_id)
+	if err != nil {
+		return nil, fmt.Errorf("tagNameByUser %q: %v", memo_id, err)
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		tag := Tag{}
+		if err := rows.Scan(&tag.TagName, &tag.Id, &tag.UserId, &tag.MemoNum); err != nil {
+			return nil, fmt.Errorf("tagNameByUser %q: %v", memo_id, err)
+		}
+		tags = append(tags, tag)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("tagNameByUser %q: %v", memo_id, err)
+	}
+	return tags, nil
+}
+
 // Tagの更新関数
 func (tag *Tag) UpdateTag() error {
 	_, err := db.Exec(

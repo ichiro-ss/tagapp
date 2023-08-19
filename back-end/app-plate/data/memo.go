@@ -20,6 +20,7 @@ type Memo struct {
 
 // Memoのデータベースへ作成
 func (memo *Memo) CreateMemo(tags []Tag) (int, error) {
+	fmt.Println("CreateMmemo: tags", tags)
 	result, err := db.Exec(
 		"INSERT INTO memo (title, userid, content, createdAt, picPath) VALUES (?, ?, ?, ?, ?)",
 		memo.Title, memo.UserId, memo.Content, memo.CreatedAt, memo.PicPath,
