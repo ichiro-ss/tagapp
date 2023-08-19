@@ -62,7 +62,6 @@ export const LeftSideComponent = () => {
         />
       {searchResults.length >= 0 && (
         <div>
-          <h4>検索結果</h4>
           <ul>
             {searchResults.map((comment, index) => (
               <li key={index}>

@@ -6,7 +6,7 @@ import { LeftSideComponent } from "./components/leftsideComponent";
 import MemoList from "./components/memoList";
 import MemoDetailedView from "./components/memoDetailedView";
 import { MemoData } from "./components/memoData";
-// import '../styles/index.module.css';
+//import '../styles/index.module.css';
 
 
 export default function Home() {
@@ -15,24 +15,22 @@ export default function Home() {
   const [selectedMemo, setSelectedMemo] = useState<MemoData | undefined>(undefined);
 
   return (
-    <div className="page-container">
-        
-        <div className="container-fluid content">
-        <Header title={title} />
-          <div className="row">
-            <div className="left-column col-md-auto border overflow-auto">
+    <div>
+      <div className="container-fluid content">
+          <div className="row vh-100">
+            <Header title={title} className="fixed-top"/>
+            <div className="left-column col-md-auto h-75 border-0 overflow-auto">
               <LeftSideComponent />
             </div>
-            <div className="center-column col border overflow-auto">
+            <div className="center-column col h-75 border-0 overflow-auto">
               <MemoList setSelectedMemo={setSelectedMemo}/>
             </div>
-            <div className="right-column col border overflow-auto">
+            <div className="right-column col h-75 border-0 overflow-auto">
               <MemoDetailedView memo={selectedMemo}/>
             </div>
+            <Footer className="fixed-bottom"/>
           </div>
-          <Footer />
-        </div>
-        
+        </div>  
     </div>
   );
 }

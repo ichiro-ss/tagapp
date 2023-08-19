@@ -23,7 +23,7 @@
   
 /* タグ一覧のリストのスタイル */
 .tag-list {
-    max-height: 320px; /* リストの最大高さを200pxに設定（オーバーフロー時にスクロールバー表示） */
+    max-height: 260px; /* リストの最大高さを200pxに設定（オーバーフロー時にスクロールバー表示） */
     overflow-y: auto; /* 垂直方向のスクロールバーを表示 */
     scrollbar-width: thin; /* スクロールバーの太さを細く設定 */
     scrollbar-color: #888888 #f4f4f4; /* スクロールバーカラーを設定 */
@@ -61,9 +61,6 @@
 .userContainer {
     display: flex;
     align-items: center;
-    position: fixed; /* ボタンの位置を固定化 */
-    top: 640px; /* 下部からの距離を設定 */
-    left: 10px; /* 右からの距離を設定 */
   }
 
   .userIcon {
@@ -81,7 +78,5 @@
 
 /* 新規メモ作成ボタンのスタイル */
 .new-memo-button {
-    position: fixed; /* ボタンの位置を固定化 */
-    top: 700px; /* 上部からの距離を設定 */
-    left: 10px; /* 左からの距離を設定 */
+    margin: 10px 0 0px 0px; /* 上右下左の余白を設定 */
 }
