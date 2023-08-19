@@ -60,7 +60,7 @@ func MemoByID(id int) (Memo, error) {
 }
 
 // MemoのUserIdによる取得関数
-func MemoByUser(user_id int) ([]Memo, error) {
+func MemoByUser(user_id string) ([]Memo, error) {
 	var memos []Memo
 
 	rows, err := db.Query("SELECT * FROM memo WHERE userId = ?", user_id)

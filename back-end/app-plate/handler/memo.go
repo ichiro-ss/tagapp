@@ -134,7 +134,6 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 
 	r.ParseMultipartForm(int64(parseSize))
 
-	test := r.FormValue("test")
 	userName := r.FormValue("username")
 	memoTitle := r.FormValue("memotitle")
 	memoContent := r.FormValue("memocontent")
@@ -202,7 +201,6 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 	params.date = datep
 
 	params.print()
-	fmt.Println("test:", test)
 	return
 }
 
