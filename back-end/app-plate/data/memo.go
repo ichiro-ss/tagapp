@@ -105,12 +105,13 @@ func MemoByTag(tag_name string, user_id string) ([]Memo, error) {
 
 func MemoByTagAND(tag_names []string, user_id string) ([]Memo, error) {
 	var memos []Memo
-	and_tags := "(" + tag_names[0]
+	and_tags := "('" + tag_names[0] + "'"
 	for i := 1; i < len(tag_names); i++ {
-		and_tags += (", " + tag_names[i])
+		and_tags += (", '" + tag_names[i] + "'")
 	}
 	and_tags += ")"
-	rows, err := db.Query("SELECT m.* FROM tag_map mt, memo m, tag t WHERE mt.tagId = t.id AND (t.tagName IN " + and_tags + ") AND m.id = mt.memoId GROUP BY m.id HAVING COUNT( m.id )=3")
+	rows, err := db.Query("SELECT m.* FROM tag_map mt, memo m, tag t WHERE mt.tagId = t.id AND (t.tagName IN "+and_tags+") AND m.id = mt.memoId GROUP BY m.id HAVING COUNT( m.id )=?", len(tag_names))
+	fmt.Println("SELECT m.* FROM tag_map mt, memo m, tag t WHERE mt.tagId = t.id AND (t.tagName IN " + and_tags + ") AND m.id = mt.memoId GROUP BY m.id HAVING COUNT( m.id )=?")
 	if err != nil {
 		return nil, fmt.Errorf("memosByTagAND %s: %v", tag_names, err)
 	}
