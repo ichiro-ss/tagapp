@@ -5,7 +5,7 @@
     border: 1px solid #c1c1c1; /* 1px幅の薄灰色の境界線を設定 */
     padding: 12px; /* ボックスの余白を設定 */
     border-radius: 8px; /* ボックスの角を丸くする */
-    margin: 50px 0 20px 5px; /* 上右下左の余白を設定 */
+    margin: 0px 0 20px 5px; /* 上右下左の余白を設定 */
     width: 242px; /* ボックスの幅を設定 */
 }
 
