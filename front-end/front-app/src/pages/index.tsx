@@ -1,4 +1,5 @@
 import Header from "./components/header";
+import Footer from "./components/footer";
 import { useState, useEffect } from "react";
 import { Back_Index } from "./constants";
 import { LeftSideComponent } from "./components/leftsideComponent";
@@ -19,7 +20,7 @@ const makeCROSRequest = (request : any) => {
 
 
 export default function Home() {
-  const title = "TestApp"
+  const title = "TagApp"
   const [isLoggedIn , setIsLoggedIn]=useState<boolean|undefined>(undefined);
   const [username , setUsername]=useState<string|undefined>(undefined);
   const [selectedMemo, setSelectedMemo] = useState<MemoData | undefined>(undefined);
@@ -71,24 +72,21 @@ export default function Home() {
 
   return (
     <div>
-      <Header title={title} />
-      <div className="container-fluid">
-        <div className="row vh-100 overflow-auto">
-          <div className="col-2 h-100 border left-column overflow-auto">
-            <LeftSideComponent />
-            
+      <div className="container-fluid content">
+          <div className="row vh-100">
+            <Header title={title} className="fixed-top"/>
+            <div className="left-column col-md-auto h-75 border-0 overflow-auto">
+              <LeftSideComponent />
+            </div>
+            <div className="center-column col h-75 border-0 overflow-auto">
+              <MemoList setSelectedMemo={setSelectedMemo}/>
+            </div>
+            <div className="right-column col h-75 border-0 overflow-auto">
+              <MemoDetailedView memo={selectedMemo}/>
+            </div>
+            <Footer className="fixed-bottom"/>
           </div>
-          <div className="center-column col-5 h-100 border overflow-auto">
-            <MemoList setSelectedMemo={setSelectedMemo}/>
-          </div>
-          <div className="right-column col-5 h-100 border overflow-auto">
-            <MemoDetailedView memo={selectedMemo}/>
-          </div>
-        </div>
-      </div>
-      <Button onClick={logoutHandler} variant="warning" className="float-end" >
-              Logout
-      </Button>
+        </div>  
     </div>
     
   );

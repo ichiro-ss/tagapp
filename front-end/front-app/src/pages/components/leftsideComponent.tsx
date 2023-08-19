@@ -4,13 +4,10 @@ import { sortedTags, tagCountMap } from "./left/tagCount";
 import TagToggle from "./left/tagToggle";
 import SearchBar from "./left/searchBar";
 import { handleSearch } from "./left/searchUtils";
-//import PopupForm from "./left/popUpForm";
-//import 'bootstrap/dist/css/bootstrap.min.css';
 import OpenModalButton from "./left/openModalButton";
 import MemoModal from "./left/memoModal";
-import styles from '../../styles/leftside.module.css'; // スタイルを読み込む
+import styles from '../../styles/leftside.module.css';
 import UserContainer from "./left/userName";
-
 
 
 
@@ -35,12 +32,8 @@ export const LeftSideComponent = () => {
     setSearchResults([]); // タグをクリックしたら検索結果をリセット
     onSearch(tag, false, true); // 検索バーの内容も更新するために onSearch を呼び出す
   };
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newSearchTerm = e.target.value;
-  //   setSearchTerm(newSearchTerm);
-  //   onSearch(newSearchTerm, false, false); // 検索バーの内容も更新するために onSearch を呼び出す
-  // };
-  const [showTags, setShowTags] = useState(false); // 初期値をfalseに設定
+  
+  const [showTags, setShowTags] = useState(false);
   const handleToggleTags = () => {
     setShowTags(!showTags);
   };
@@ -54,7 +47,6 @@ export const LeftSideComponent = () => {
     setShowModal(false);
   };
   const handleCreateMemo = (memo: MemoData) => {
-    // 新しいメモの作成処理を実装
     console.log('新しいメモを作成:', memo);
   };
 
@@ -70,7 +62,6 @@ export const LeftSideComponent = () => {
         />
       {searchResults.length >= 0 && (
         <div>
-          <h4>検索結果</h4>
           <ul>
             {searchResults.map((comment, index) => (
               <li key={index}>

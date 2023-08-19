@@ -1,0 +1,45 @@
+.header {
+    position: fixed;
+    top: 0;
+    height: 45px; /* ヘッダーの高さを設定（必要に応じて調整） */
+}
+.title {
+    margin-left: 10px;
+}
+
+.left-column {
+    width: 250px;
+    min-width: 250px; /* 最小幅を250pxに設定 */
+    flex: 0 0 250px; /* 幅を固定 */
+}
+
+.center-column{
+    min-width: 250px; /* 最小幅を250pxに設定 */
+    flex: 1; /* 残りのスペースを均等に分配 */
+}
+
+.right-column{
+    flex: 1; /* 残りのスペースを均等に分配 */
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    height: 25px; /* フッターの高さを設定（必要に応じて調整） */
+}
+
+.content {
+    min-height: calc(100vh - 70px); /* ヘッダーとフッターの高さを考慮に入れて調整 */
+}
+
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* ページ全体の高さをビューポートの高さに合わせる */
+  }
+  
+  .content {
+    flex-grow: 1; /* コンテンツが残りの高さを埋める */
+  }
