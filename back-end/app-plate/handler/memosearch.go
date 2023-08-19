@@ -2,6 +2,7 @@ package handler
 
 import (
 	"app-plate/data"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -47,8 +48,8 @@ func (opt *option) isSame(opt2 *option) bool {
 }
 
 type apiMemoSearchJsonMemo struct {
-	memo data.Memo
-	tags []string
+	Memo data.Memo
+	Tags []string
 }
 
 func makeMemoSearchJsonMemoStruct(memo data.Memo) (apiMemoSearchJsonMemo, error) {
@@ -59,8 +60,8 @@ func makeMemoSearchJsonMemoStruct(memo data.Memo) (apiMemoSearchJsonMemo, error)
 		return memoJson, err
 	}
 
-	memoJson.memo = memo
-	memoJson.tags = tagNames
+	memoJson.Memo = memo
+	memoJson.Tags = tagNames
 
 	return memoJson, err
 }
@@ -114,11 +115,11 @@ func isMatchKeyword(keywords []string, memoJson *apiMemoSearchJsonMemo, opt opti
 	}
 
 	var targets []string
-	for _, value := range memoJson.tags {
+	for _, value := range memoJson.Tags {
 		targets = append(targets, value)
 	}
-	targets = append(targets, memoJson.memo.Title)
-	targets = append(targets, memoJson.memo.Content)
+	targets = append(targets, memoJson.Memo.Title)
+	targets = append(targets, memoJson.Memo.Content)
 
 	and := makeAndOption()
 	or := makeOrOption()
@@ -171,7 +172,6 @@ func isMatchKeyword(keywords []string, memoJson *apiMemoSearchJsonMemo, opt opti
 }
 
 type apiMemoSearchParams struct {
-	SearchType     string
 	UserName       string
 	Keywords       []string
 	Tags           []string
@@ -295,7 +295,7 @@ func memoSearchByTagName(tagNames []string, memoJsons []apiMemoSearchJsonMemo, t
 	}
 
 	for _, memo := range memoJsons {
-		if isMatchTags(memo.tags, tagNames, tagOpt) {
+		if isMatchTags(memo.Tags, tagNames, tagOpt) {
 			results = append(results, memo)
 		}
 	}
@@ -323,7 +323,7 @@ func memoSearchByDate(startDate, endDate *time.Time, memoJsons []apiMemoSearchJs
 	if startDate != nil {
 		var tmp []apiMemoSearchJsonMemo
 		for _, memoJson := range memoJsons {
-			if startDate.Before(memoJson.memo.CreatedAt) {
+			if startDate.Before(memoJson.Memo.CreatedAt) {
 				tmp = append(tmp, memoJson)
 			}
 		}
@@ -333,7 +333,7 @@ func memoSearchByDate(startDate, endDate *time.Time, memoJsons []apiMemoSearchJs
 	if endDate != nil {
 		var tmp []apiMemoSearchJsonMemo
 		for _, memoJson := range memoJsons {
-			if endDate.After(memoJson.memo.CreatedAt) {
+			if endDate.After(memoJson.Memo.CreatedAt) {
 				tmp = append(tmp, memoJson)
 			}
 		}
@@ -353,12 +353,16 @@ func searchMemoWithParam(params *apiMemoSearchParams) []apiMemoSearchJsonMemo {
 		return results
 	}
 
+	fmt.Println("Search With Tag")
 	//タグでの検索
 	results = memoSearchByTagName(params.Tags, results, params.TagOption)
+
 	//全文検索
+	fmt.Println("Search With Keyword")
 	results = memoSearchByKeywords(params.Keywords, results, params.KeywordOption)
 
 	//日付絞り込み
+	fmt.Println("Search with date")
 	results = memoSearchByDate(params.StartDate, params.EndDate, results)
 
 	return results
@@ -371,6 +375,10 @@ func searchMemoByIndex(pageIndex, pageItemAmount int, memoJsons []apiMemoSearchJ
 	}
 
 	size := len(memoJsons)
+	if size <= 0 {
+		return results
+	}
+
 	startIndex := (pageIndex - 1) * pageItemAmount
 
 	if size <= startIndex {
@@ -382,7 +390,11 @@ func searchMemoByIndex(pageIndex, pageItemAmount int, memoJsons []apiMemoSearchJ
 		endIndex = size
 	}
 
-	return results[startIndex:endIndex]
+	fmt.Println("startIndex=", startIndex)
+	fmt.Println("endIndex=", endIndex)
+	fmt.Println("len = ", size)
+
+	return memoJsons[startIndex:endIndex]
 }
 
 func searchMemoHandle(w http.ResponseWriter, r *http.Request) {
@@ -392,8 +404,16 @@ func searchMemoHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println("Params:", params)
+
 	results := searchMemoWithParam(&params)
 	results = searchMemoByIndex(params.PageIdx, params.PageItemAmount, results)
+
+	// fmt.Println("results : ", results)
+	// fmt.Println("")
+	// fmt.Println("results[0] : ", results[0])
+	// fmt.Println("createdAt :", results[0].Memo.CreatedAt)
+	// w.Header().Set("Content-Type", CONTENT_JSON_STR)
 
 	err = setJsonData(w, r, results)
 	if err != nil {
