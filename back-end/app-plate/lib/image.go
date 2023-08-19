@@ -98,7 +98,7 @@ func (img *GoImg) Save(dir, fname string) (string, error) {
 		return "", errors.New("Invalid Image File Type")
 	}
 
-	path := dir + "/" + fname
+	path := dir + fname
 	file, err := os.Create(path)
 	if err != nil {
 		log.Println("Cannot create File : ", err)

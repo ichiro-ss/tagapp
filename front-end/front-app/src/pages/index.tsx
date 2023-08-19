@@ -11,7 +11,6 @@ export default function Home() {
   const title = "TestApp"
   const [selectedMemo, setSelectedMemo] = useState<MemoData | undefined>(undefined);
 
-
   return (
     <div>
         <Header title={title} />
