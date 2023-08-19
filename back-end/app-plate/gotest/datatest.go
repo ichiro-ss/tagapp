@@ -66,7 +66,7 @@ func TestMemoData() {
 		{Id: 2, TagName: "b", UserId: userId, MemoNum: 1},
 	}
 	memo2_tags := []data.Tag{
-		{Id: 3, TagName: "c", UserId: userId, MemoNum: 1},
+		{Id: 3, TagName: "a", UserId: userId, MemoNum: 1},
 		{Id: 4, TagName: "b", UserId: userId, MemoNum: 1},
 	}
 	var err error
@@ -133,6 +133,15 @@ func TestMemoData() {
 		return
 	}
 	fmt.Println("tagがbのmemoは")
+	fmt.Println(memos)
+
+	fmt.Println("TagによるMemoのAND検索")
+	memos, err = data.MemoByTagAND([]string{"a", "b"}, userId)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("tagがaとbのmemoは")
 	fmt.Println(memos)
 
 	fmt.Println("Memoの更新開始")
