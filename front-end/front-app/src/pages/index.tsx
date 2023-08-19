@@ -11,26 +11,54 @@ export default function Home() {
   const axios = require('axios').default;
   const router = useRouter();
 
-  axios.get(Back_Index+"/api/login",{
-    withCredentials:true,
+  const url=Back_Index+'/api/login';
+  const req ={
+    method:'GET',
     creadentials:"include",
     headers: {
       "Access-Control-Allow-Credentials": "true",
-    }
-  })
-    .then(
-      function (r:any):void{
-        if(r.status===200){
-          setIsLoggedIn(true);
-        }else{
-          setIsLoggedIn(false);
-        }
+    },
+  };
+
+  fetch(url,req)
+    .then( (res:Response)=>{
+      if(!res.ok){
+        console.log(req);
+        console.log(res);
+        setIsLoggedIn(false);
       }
-    ).catch( (error:any) =>{
+      else{
+        setIsLoggedIn(true);
+      }
+      res.json().then((data) => (console.log(data)));
+    })
+    .catch( (error:Error) =>{
+      console.log("Error occurs in API call");
+      console.log(error);
       setIsLoggedIn(false);
-      console.log("error");
-    }
-  )
+  });
+
+  /* ↓ こっちはうごく */
+  // axios.get(Back_Index+"/api/login",{
+  //   withCredentials:true,
+  //   creadentials:"include",
+  //   headers: {
+  //     "Access-Control-Allow-Credentials": "true",
+  //   }
+  // })
+  //   .then(
+  //     function (r:any):void{
+  //       if(r.status===200){
+  //         setIsLoggedIn(true);
+  //       }else{
+  //         setIsLoggedIn(false);
+  //       }
+  //     }
+  //   ).catch( (error:any) =>{
+  //     setIsLoggedIn(false);
+  //     console.log("wrong api request");
+  //   }
+  // )
 
   useEffect( ()=>{
     if(isLoggedIn!=null && !isLoggedIn) router.push("/login");
@@ -40,7 +68,6 @@ export default function Home() {
   if(isLoggedIn==undefined){
     return <>Loading...</>;
   }
-  
 
   if(isLoggedIn){
     return (
@@ -54,8 +81,7 @@ export default function Home() {
         <div>
           <MemoList />
         </div>
-      
-      //</div>
+      </div>
     );
   }
   else{

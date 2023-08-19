@@ -1,15 +1,20 @@
 import Header from "./components/header";
 import { useEffect, useState } from "react";
 import { Back_Index } from "./constants";
-import { LeftSideComponent } from "./components/leftsideComponent";
-import MemoList from "./components/memoList";
 import { useRouter } from 'next/router'
-import { useCookies } from "react-cookie";
 import { useForm , SubmitHandler} from "react-hook-form";
+
+const makeCROSRequest = (request : any) => {
+  request.credentials = "include"
+  request.headers = {
+      "Access-Control-Allow-Credentials": "true",
+  } 
+  return request
+}
 
 export default function login() {
   const [isLoggedIn, setIsLoggedIn]=useState<boolean|undefined>(undefined);
-  const [cookies, setCookie, removeCookie]=useCookies(["userid","password"]); 
+  const [submitResult, setSubmitResult]=useState<boolean|undefined>(undefined);
   const router=useRouter();
 
   const { register, handleSubmit, setValue , reset} = useForm<{
@@ -17,37 +22,78 @@ export default function login() {
     pw:string;
     btn:string;
   }>();
-  const {name:uid} = register('uid');
-  const {name:pw} = register('pw');
-  useEffect( ()=>{
-    if(!!isLoggedIn){
-      setCookie("userid",uid);
-      setCookie("password",pw);
-      router.push("/");
-    }
-  }, [isLoggedIn]
-  );
-
-
-  const config={
-  }
 
   const onSubmit:SubmitHandler<{
     uid:string;
     pw:string;
-    btn:string;
+    btn:string|undefined;
   }> =(data)=>{
-    const axios = require('axios').default;
+    const url=Back_Index+'/api/login';
+    const req ={
+      method:'GET',
+      body: new URLSearchParams(
+        { username:data.uid, password:data.pw, }
+      ),
+    };
+
     if( data.btn==='Submit'){
-      axios.post();
+      req.method='POST';
+      fetch(url,makeCROSRequest(req))
+        .then( (res:Response)=>{
+          if(!res.ok){
+            console.log("Submittion fail");
+            res.json().then((data) => (console.log(data)));
+          }
+          else console.log("Submittion success");
+        })
+        .catch( (error:Error) =>{
+          console.log("Error occurs in submit");
+          console.log(error);
+      });
     }
-    if( data.btn==='Login'){
-      axios.put();
+    else if( data.btn==='Login'){
+      req.method='PUT';
+      fetch(url,makeCROSRequest(req))
+        .then( (res:any)=>{
+          if(res.status!==200){
+            console.log("Login fail");
+            console.log(res.data);
+          }
+          else{
+            console.log("Login success");
+            // router.push("/");
+          }
+        })
+        .catch( (error:Error) =>{
+          console.log("Error occurs in login");
+          console.log(error);
+      });
+    }
+    else if( data.btn==='Get'){
+      req.method='GET';
+      delete req.body;
+      fetch(url,makeCROSRequest(req))
+        .then( (res:any)=>{
+          if(res.status!==200){
+            console.log("get fail");
+            
+          }
+          else{
+            console.log("get success");
+          }
+          console.log(res.data);
+          res.json().then((data) => (console.log(data)));
+        })
+        .catch( (error:Error) =>{
+          console.log("Error occurs in login");
+          console.log(error);
+      });
     }
     else{
-      console.log("error");
+      console.log("strange request" + data.btn);
       console.log(data);
     }
+    data.btn=undefined;
   }
 
   return (
@@ -66,6 +112,7 @@ export default function login() {
           <div className="btn-toolbar d-flex justify-content-center">
             <button type="submit" value="submit" className="btn btn-primary me-2" onClick={ ()=>(setValue('btn','Submit') )}>Submit</button>
             <button type="submit" value="login" className="btn btn-primary me-2" onClick={ ()=>(setValue('btn','Login') )}>Login</button>
+            <button type="submit" value="get" className="btn btn-primary me-2" onClick={ ()=>(setValue('btn','Get') )}>GET</button>
             <button type="reset" className="btn btn-primary" onClick={()=>reset()}>Reset</button>
           </div>
         </form>
