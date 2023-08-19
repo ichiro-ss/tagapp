@@ -8,12 +8,12 @@
     border-radius: 30px;
     /* height: 700px; */
     /* width: 800px; */
+    height: 98%;
+    width: 100%;
     display: flex;
     flex-wrap: wrap; /* コンテナが横に並び、行が途切れたら折り返す */
     align-items: flex-start; /* 左寄せに配置 */
     align-content: flex-start; /* 上寄せに配置 */
-    padding-top: 30px; /* 上部の余白を追加 */
-    padding-bottom: 30px; /* 下部の余白を追加 */
     overflow-y: auto; /* 垂直方向のスクロールバーを表示 */
     /* カスタムスクロールバースタイル */
     scrollbar-width: thin; /* スクロールバーの太さを設定 */
@@ -105,29 +105,56 @@
 } */
 
 .searchResult {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 10px;
     font-size: 16px;
     color: #808080;
 }
 
 .sortFormat {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 10px;
     font-size: 16px;
     color: #808080;
+    background-color: #ffffff;
+    border: 0px;
+    transition: background-color 0.3s ease-in-out; /* トランジションを追加 */
+}
+.sortFormat:hover { /* カーソルを合わせたときのスタイルを追加 */
+    background-color: #E9E9E9;
 }
 
 .displayFormat {
-    position: fixed;
-    bottom: 0;
-    left: 200;
-    padding: 10px;
     font-size: 16px;
     color: #808080;
-    /* background-color: #FFFFFF; */
+    background-color: #FFFFFF;
+    border: 0px;
+    transition: background-color 0.3s ease-in-out; /* トランジションを追加 */
 }
+.displayFormat:hover { /* カーソルを合わせたときのスタイルを追加 */
+    background-color: #E9E9E9;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+  }
+
+  .footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: left;
+    padding: 10px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+  }

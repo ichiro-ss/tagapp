@@ -7,31 +7,30 @@ const MemoList = ( {setSelectedMemo}:{setSelectedMemo:any}) => {
     const handleMemoClick = (memo: Memo) => {
       setSelectedMemo(memo);
     };
+
+    const newSortedMemos = [...memos].sort((a, b) => b.date - a.date);
+    // const oldSortedMemos = [...memos].sort((a, b) => b.date - a.date);
   
     return (
-      <div className={styles.memoList}>
-        <div className={styles.searchResult}>
-            ホーム：
-        </div>
-        <div className={styles.sortFormat}>
-            ソート：時刻順（昇順）
-        </div>
-        <div className={styles.displayFormat}>
-            表示形式：
-        </div>
-          {memos.map((memo, index) => (
-            <div className={styles.memoContainer}>
-                <button
-                    key={index}
-                    className={styles.memoButton}
-                    onClick={() => handleMemoClick(memo)}
-                >
-                    <h3 className={styles.memoTitle}>{truncateTitle(memo.title)}</h3>
-                    <p className={styles.memoTags}>{truncateTags(renderTags(memo.tag))}</p>
-                    <p className={styles.memoComment}>{truncateComment(memo.comment)}</p>
-                    <p className={styles.memoDate}>{formatDate(memo.date)}</p>
-                </button>
-              </div>
+       // ソート方法，表示形式で変える
+       <div className={styles.memoList}>
+       {/* ヘッダー */}
+       <div className={styles.header}>
+           <div className={styles.searchResult}>ホーム：</div>
+           <button className={styles.sortFormat}>ソート：新しい順</button>
+       </div>
+
+          {newSortedMemos.map((memo, index) => (
+            <button
+                key={index}
+                className={styles.memoContainer}
+                onClick={() => handleMemoClick(memo)}
+            >
+                <h3 className={styles.memoTitle}>{truncateTitle(memo.title)}</h3>
+                <p className={styles.memoTags}>{truncateTags(renderTags(memo.tag))}</p>
+                <p className={styles.memoComment}>{truncateComment(memo.comment)}</p>
+                <p className={styles.memoDate}>{formatDate(memo.date)}</p>
+            </button>
           ))}
         {/* <div className={styles.selectedMemoContainer}>
           {selectedMemo && (
@@ -43,6 +42,13 @@ const MemoList = ( {setSelectedMemo}:{setSelectedMemo:any}) => {
             </div>
           )}
         </div> */}
+        
+        {/* フッター */}
+        <div className={styles.footer}>
+            <button className={styles.displayFormat}>
+                表示形式：
+            </button>
+        </div>
 
       </div>
     );
