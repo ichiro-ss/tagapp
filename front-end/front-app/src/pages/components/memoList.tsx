@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { memos, MemoData } from "./memoData"; // ←ここをmemos全部じゃなくて，検索で引っかかったやつだけにする？
+import { memos } from "./memoData"; // ←ここをmemos全部じゃなくて，検索で引っかかったやつだけにする？
 import styles from "../../styles/memoList.module.css";
-
-const MemoList = () => {
-    const [selectedMemo, setSelectedMemo] = useState<MemoData | null>(null);
-  
-    const handleMemoClick = (memo: MemoData) => {
+import Memo from "./memoTypeDef"
+ 
+const MemoList = ( {setSelectedMemo}:{setSelectedMemo:any}) => {
+    const handleMemoClick = (memo: Memo) => {
       setSelectedMemo(memo);
     };
   
