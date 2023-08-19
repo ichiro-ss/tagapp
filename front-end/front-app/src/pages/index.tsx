@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Back_Index } from "./constants";
 import { LeftSideComponent } from "./components/leftsideComponent";
 import MemoList from "./components/memoList";
+import MemoDetailedView from "./components/memoDetailedView";
+import { MemoData } from "./components/memoData";
 import { useRouter } from 'next/router'
 
 const makeCROSRequest = (request : any) => {
@@ -17,6 +19,7 @@ export default function Home() {
   const title = "TestApp"
   const [isLoggedIn , setIsLoggedIn]=useState<boolean|undefined>(undefined);
   const [username , setUsername]=useState<string|undefined>(undefined);
+  const [selectedMemo, setSelectedMemo] = useState<MemoData | undefined>(undefined);
   const axios = require('axios').default;
   const router = useRouter();
 
@@ -51,24 +54,28 @@ export default function Home() {
     return <>Loading...</>;
   }
 
-  if(isLoggedIn){
-    return (
-      <div>
-        <Header title={title} />
-        {/* 左側表示 */}
-        <div>
-        <LeftSideComponent />
-        </div>
-        {/* メモ表示 */}
-        <div>
-          <MemoList />
-        </div>
-      </div>
-    );
-  }
-  else{
-    router.replace("/login")
-    return <>Failed</>;
+  if(!isLoggedIn){
+    //開発中につき無効化
+    // router.replace("/login")
+    // return <>Failed</>;
   }
 
+  return (
+    <div>
+        <Header title={title} />
+        <div className="container-fluid">
+          <div className="row vh-100 overflow-auto">
+            <div className="col-2 h-100 border left-column overflow-auto">
+              <LeftSideComponent />
+            </div>
+            <div className="center-column col-5 h-100 border overflow-auto">
+              <MemoList setSelectedMemo={setSelectedMemo}/>
+            </div>
+            <div className="right-column col-5 h-100 border overflow-auto">
+              <MemoDetailedView memo={selectedMemo}/>
+            </div>
+          </div>
+        </div>
+    </div>
+  );
 }

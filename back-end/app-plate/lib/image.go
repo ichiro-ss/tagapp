@@ -88,21 +88,21 @@ func LoadImage(path string) (GoImg, error) {
 	return img, nil
 }
 
-func (img *GoImg) Save(dir, fname string) error {
+func (img *GoImg) Save(dir, fname string) (string, error) {
 	switch img.Type {
 	case "png":
-		fname += fname + ".png"
+		fname = fname + ".png"
 	case "jpeg":
-		fname += fname + ".jpg"
+		fname = fname + ".jpg"
 	default:
-		return errors.New("Invalid Image File Type")
+		return "", errors.New("Invalid Image File Type")
 	}
 
-	path := dir + "/" + fname
+	path := dir + fname
 	file, err := os.Create(path)
 	if err != nil {
 		log.Println("Cannot create File : ", err)
-		return err
+		return "", err
 	}
 
 	defer file.Close()
@@ -116,5 +116,5 @@ func (img *GoImg) Save(dir, fname string) error {
 		jpeg.Encode(file, img.Image, &options)
 	}
 
-	return nil
+	return path, nil
 }

@@ -1,18 +1,9 @@
 import Head from 'next/head'
 import { useState } from 'react';
 import useSWR from 'swr';
+import {MemoData} from './memoData';
 
-type Memo = {
-  title :string,
-  author:string,
-  body  :string,
-  filepath:string,
-  id: number,
-  date:string,
-  tags:string[]
-};
-
-export default function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
+export default function MemoDetailedView({memo}: {memo?:MemoData}): JSX.Element{
   if(memo == null){
     return(
       <div className='detailedView m-1'>
@@ -25,19 +16,21 @@ export default function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
       <div className='title'>
         <h1> {memo.title} </h1>
       </div>
-      <div className='author'>
-        <h2> Author : {memo.author} </h2>
-      </div>
-      <PreviewDoc filepath={memo.filepath} />
+      { memo.userid &&
+        <div className='author'>
+          <h2> Author : {memo.userid} </h2>
+        </div>
+      }
+      { memo.filepath && <PreviewDoc filepath={memo.filepath} /> }
       <div className='body'>
-        { memo.body.split("\n").map((e) => <div>{e}</div>) }
+        { memo.comment.split("\n").map((e) => <div>{e}</div>) }
       </div>
       <br/>
       <div className='date'>
         {memo.date}
       </div>
       <div className='tags'>
-        { memo.tags.map((tag) => "#"+tag+" ") }
+        { memo.tag.map((tag:string) => "#"+tag+" ") }
       </div>
     </div>
   );

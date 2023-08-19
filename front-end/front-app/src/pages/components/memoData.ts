@@ -1,8 +1,11 @@
 export type MemoData = {
-    tag: string[];
-    date: number; // 例: 20230816103045
     title: string;
+    userid ?:string,
     comment: string;
+    filepath ?:string,
+    id ?:number,
+    date: number; // 例: 20230816103045
+    tag: string[];
 };
   
 export const memos: MemoData[] = [
@@ -45,16 +48,26 @@ export const memos: MemoData[] = [
 {
     tag: ["ごはん", "パスタ"],
     date: 20230817111700,
-    title: "",
+    title: "パスタ",
     comment: "久しぶりに家でパスタたべた！",
 },
 {
-    tag: ["ごはん", "パスタ"],
+    tag: ["ごはん", "パスタ", "研究室飯"],
     date: 20230602111700,
-    title: "",
+    title: "パスタ",
     comment: "粉チーズとハバネロ入れるとやっぱそれっぽくなるよね",
 },
-
-
+{
+    tag: ["映画", "ミュージカル"],
+    date: 2006002111700,
+    title: "メリーポピンズ",
+    comment: "おもしろかったです！",
+},
+{
+    tag: ["映画", "ミュージカル"],
+    date: 20230502111700,
+    title: "グレイテスト・ショーマン",
+    comment: "唯一二回映画館で観た",
+},
 
 ];

@@ -2,7 +2,8 @@ import { error } from "console"
 import Header from "../components/header"
 import { Back_Index } from "../constants"
 import { FormEvent } from "react"
-import  Link  from "next/link"
+import Link from "next/link"
+import { useRouter } from "next/router"
 
 const formDatatoURLSerachParams = (formData: FormData): URLSearchParams => {
     const params: [string, string][] = []
@@ -14,11 +15,11 @@ const formDatatoURLSerachParams = (formData: FormData): URLSearchParams => {
     return new URLSearchParams(params)
 }
 
-const makeCROSRequest = (request : any) => {
+const makeCROSRequest = (request: any) => {
     request.credentials = "include"
     request.headers = {
         "Access-Control-Allow-Credentials": "true",
-    } 
+    }
     return request
 }
 
@@ -27,8 +28,8 @@ export default function Home() {
     const url = Back_Index + "/api/login"
 
     const onGetUserBtn = () => {
-        fetch(url, makeCROSRequest({}) 
-            )
+        fetch(url, makeCROSRequest({})
+        )
             .then((res: Response) => {
                 if (!res.ok) {
                     res.json().then((data) => (console.log(data)));
@@ -78,7 +79,7 @@ export default function Home() {
         const formData: FormData = new FormData(form)
         const urlParams = formDatatoURLSerachParams(formData)
         console.log(urlParams.toString())
-        const req = {method: "PUT", body: urlParams}
+        const req = { method: "PUT", body: urlParams }
 
         fetch(url, makeCROSRequest(req)
         )
@@ -100,17 +101,22 @@ export default function Home() {
     }
 
     const onLogoutBtn = () => {
-        const url = Back_Index+"/api/logout"
+        const url = Back_Index + "/api/logout"
         fetch(url, makeCROSRequest({}))
-        .then((res: Response) => {
-            if ( res.ok) {
-                console.log("Logoutに成功しました")
-            } else {
-                console.log("Logoutに失敗しました")
-            }
-        }).catch( err => {
-            console.error(err)
-        })
+            .then((res: Response) => {
+                if (res.ok) {
+                    console.log("Logoutに成功しました")
+                } else {
+                    console.log("Logoutに失敗しました")
+                }
+            }).catch(err => {
+                console.error(err)
+            })
+    }
+
+    const router = useRouter()
+    const onLocationBtn = () => {
+        router.push("/tests/mymemo")
     }
 
     return (
@@ -132,8 +138,9 @@ export default function Home() {
                 <button type="button" className="btn btn-primary" onClick={onLogoutBtn}>Get User</button>
             </form>
             <Link href="/tests/mymemo">
-            <p>move to mymemo page →</p>
+                <p>move to mymemo page →</p>
             </Link>
+            <button type="button" className="btn btn-primary" onClick={onLocationBtn}>ページ遷移</button>
         </div>
 
     )
