@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { memos } from "./memoData"; // ←ここをmemos全部じゃなくて，検索で引っかかったやつだけにする？
+import { MemoData, memos } from "./memoData"; // ←ここをmemos全部じゃなくて，検索で引っかかったやつだけにする？
 import styles from "../../styles/memoList.module.css";
-import Memo from "./memoTypeDef"
  
 const MemoList = ( {setSelectedMemo}:{setSelectedMemo:any}) => {
     const [sortByNewest, setSortByNewest] = useState(true); // 初期値を新しい順に設定
     const [displayInGrid, setDisplayInGrid] = useState(true); // 初期値をグリッド表示に設定
 
-    const handleMemoClick = (memo: Memo) => {
+    const handleMemoClick = (memo: MemoData) => {
       setSelectedMemo(memo);
     };
 
