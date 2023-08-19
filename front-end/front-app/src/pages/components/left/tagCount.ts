@@ -1,4 +1,4 @@
-import { MemoData,memos } from "./memoData";
+import { MemoData, memos } from "../memoData";
 
 export const tagCountMap: { [tag: string]: number } = {};
 
