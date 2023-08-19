@@ -15,8 +15,8 @@ import (
 )
 
 // imageの保存ディレクトリのパスの生成
-func makeUserImageFokdaPath(userId string) string {
-	return "./img/users/" + userId
+func makeUserImageFoldaPath(userId string) string {
+	return "./img/users/" + userId + "/"
 }
 
 // imageの保存ファイル名の生成
@@ -27,7 +27,7 @@ func makePostImageFname() string {
 
 // imageを保存するフォルダの生成
 func makeUserImageFolda(userId string) error {
-	path := makeUserImageFokdaPath(userId)
+	path := makeUserImageFoldaPath(userId)
 	err := os.MkdirAll(path, os.ModePerm)
 
 	if err != nil {
@@ -242,7 +242,7 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if thumbnail != nil {
-		dir := makeUserImageFokdaPath(params.userName)
+		dir := makeUserImageFoldaPath(params.userName)
 		fname := makePostImageFname()
 		imgpath, err = thumbnail.Save(dir, fname)
 
@@ -332,7 +332,7 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 
 	if thumbnail != nil {
 		if memoData.PicPath == PIC_PATH_UNDFINED_VALUE {
-			dir := makeUserImageFokdaPath(params.userName)
+			dir := makeUserImageFoldaPath(params.userName)
 			fname := makePostImageFname()
 			imgpath, err := thumbnail.Save(dir, fname)
 
@@ -355,12 +355,17 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 			dir, fname := filepath.Split(imgpath)
 			fname = lib.RemoveExtension(fname)
 
+			fmt.Println("dir : ", dir)
+			fmt.Println("fname : ", fname)
+
 			imgpath, err = thumbnail.Save(dir, fname)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("サムネイル画像の保存に失敗しました"))
 				return
 			}
+
+			fmt.Println("imgpath: ", imgpath)
 			memoData.PicPath = imgpath
 		}
 	}
