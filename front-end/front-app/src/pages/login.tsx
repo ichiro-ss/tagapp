@@ -61,28 +61,8 @@ export default function login() {
           }
           else{
             console.log("Login success");
-            // router.push("/");
+            router.push("/");
           }
-        })
-        .catch( (error:Error) =>{
-          console.log("Error occurs in login");
-          console.log(error);
-      });
-    }
-    else if( data.btn==='Get'){
-      req.method='GET';
-      delete req.body;
-      fetch(url,makeCROSRequest(req))
-        .then( (res:any)=>{
-          if(res.status!==200){
-            console.log("get fail");
-            
-          }
-          else{
-            console.log("get success");
-          }
-          console.log(res.data);
-          res.json().then((data) => (console.log(data)));
         })
         .catch( (error:Error) =>{
           console.log("Error occurs in login");
@@ -110,10 +90,18 @@ export default function login() {
             <input type="password" {...register('pw')} className="form-control"  aria-describedby="pwForm"/>
           </div>
           <div className="btn-toolbar d-flex justify-content-center">
-            <button type="submit" value="submit" className="btn btn-primary me-2" onClick={ ()=>(setValue('btn','Submit') )}>Submit</button>
-            <button type="submit" value="login" className="btn btn-primary me-2" onClick={ ()=>(setValue('btn','Login') )}>Login</button>
-            <button type="submit" value="get" className="btn btn-primary me-2" onClick={ ()=>(setValue('btn','Get') )}>GET</button>
-            <button type="reset" className="btn btn-primary" onClick={()=>reset()}>Reset</button>
+            <button type="submit" className="btn btn-primary me-2" onClick={ ()=>(setValue('btn','Submit') )}>Submit</button>
+            <button type="submit" className="btn btn-primary me-2" onClick={ ()=>(setValue('btn','Login') )}>Login</button>
+            <button type="reset" className="btn btn-primary me-2" onClick={()=>reset()}>Reset</button>
+            <button type="button" className="btn btn-primary me-2" onClick={ ()=>{
+              fetch(Back_Index+'/api/login',makeCROSRequest({method:"GET"})).then( (res:any)=>{
+                if(res.status!==200){ console.log("get fail"); }
+                res.json().then( data=>console.log(data) )
+            })}}>GET</button>
+            <button type="button" className="btn btn-primary me-2" onClick={ ()=>{
+              fetch(Back_Index+'/api/logout',makeCROSRequest({method:"GET"})).then( (res:any)=>{
+                if(res.status!==200){ console.log("logout fail"); }
+            })}}>Logout</button>
           </div>
         </form>
       </div>

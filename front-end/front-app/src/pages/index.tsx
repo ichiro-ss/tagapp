@@ -5,6 +5,14 @@ import { LeftSideComponent } from "./components/leftsideComponent";
 import MemoList from "./components/memoList";
 import { useRouter } from 'next/router'
 
+const makeCROSRequest = (request : any) => {
+  request.credentials = "include"
+  request.headers = {
+      "Access-Control-Allow-Credentials": "true",
+  } 
+  return request
+}
+
 export default function Home() {
   const title = "TestApp"
   const [isLoggedIn , setIsLoggedIn]=useState<boolean|undefined>(undefined);
@@ -12,22 +20,15 @@ export default function Home() {
   const router = useRouter();
 
   const url=Back_Index+'/api/login';
-  const req ={
-    method:'GET',
-    creadentials:"include",
-    headers: {
-      "Access-Control-Allow-Credentials": "true",
-    },
-  };
-
-  fetch(url,req)
+  
+  fetch(url,makeCROSRequest({method:'GET'}))
     .then( (res:Response)=>{
       if(!res.ok){
-        console.log(req);
-        console.log(res);
+        console.log("ng");
         setIsLoggedIn(false);
       }
       else{
+        console.log("ok");
         setIsLoggedIn(true);
       }
       res.json().then((data) => (console.log(data)));
@@ -37,28 +38,6 @@ export default function Home() {
       console.log(error);
       setIsLoggedIn(false);
   });
-
-  /* ↓ こっちはうごく */
-  // axios.get(Back_Index+"/api/login",{
-  //   withCredentials:true,
-  //   creadentials:"include",
-  //   headers: {
-  //     "Access-Control-Allow-Credentials": "true",
-  //   }
-  // })
-  //   .then(
-  //     function (r:any):void{
-  //       if(r.status===200){
-  //         setIsLoggedIn(true);
-  //       }else{
-  //         setIsLoggedIn(false);
-  //       }
-  //     }
-  //   ).catch( (error:any) =>{
-  //     setIsLoggedIn(false);
-  //     console.log("wrong api request");
-  //   }
-  // )
 
   useEffect( ()=>{
     if(isLoggedIn!=null && !isLoggedIn) router.push("/login");
@@ -85,6 +64,7 @@ export default function Home() {
     );
   }
   else{
+    router.replace("/login")
     return <>Failed</>;
   }
 
