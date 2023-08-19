@@ -68,8 +68,32 @@
     background-color: #E9E9E9;
   }
   
+.memoContainerBar{
+    background-color: #ffffff;
+    color: #c1c1c1;
+    border: 1px solid #c1c1c1;
+    border-radius: 0px;
+    height: 70px;
+    width: 100%;
+    margin: 0px;
+    /* padding: 10px; */
+    display: flex;
+    flex-direction: column; /* コンテンツを縦方向に配置 */
+    align-items: flex-start; /* 左寄せに配置 */
+    transition: background-color 0.3s ease-in-out; /* トランジションを追加 */
+}
+
+.memoContainer:hover { /* カーソルを合わせたときのスタイルを追加 */
+    background-color: #E9E9E9;
+  }
   
-.memoTitle {
+  
+.memoTitleGrid {
+    font-size: 20px;
+    /* font-style: italic; */
+    color: #808080;
+}
+.memoTitleBar {
     font-size: 20px;
     /* font-style: italic; */
     color: #808080;
@@ -79,11 +103,21 @@
     font-size: 16px;
     color: #808080;
 }
+.memoTagsBar {
+    font-size: 12px;
+    color: #808080;
+}
   
-.memoComment {
+.memoCommentGrid {
     font-size: 16px;
     color: #808080;
     margin-top: 5px;
+    text-align: left; /* 左揃えにするために追加 */
+}
+.memoCommentBar {
+    font-size: 8px;
+    color: #808080;
+    margin-top: 0px;
     text-align: left; /* 左揃えにするために追加 */
 }
   

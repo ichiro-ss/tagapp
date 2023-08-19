@@ -46,6 +46,7 @@
     text-decoration: underline;
 }
 .tag-button {
+    color: #808080;
     border: none;
     background-color: transparent;
     cursor: pointer;
