@@ -1,0 +1,87 @@
+/* メモ検索欄のコンテナのスタイル */
+.search-bar-container {
+    background-color: #ffffff; /* ボックスの背景色を設定 */
+    color: #808080; /* テキストの色を薄灰色に設定 */
+    border: 1px solid #c1c1c1; /* 1px幅の薄灰色の境界線を設定 */
+    padding: 12px; /* ボックスの余白を設定 */
+    border-radius: 8px; /* ボックスの角を丸くする */
+    margin: 10px 0 20px 5px; /* 上右下左の余白を設定 */
+    width: 242px; /* ボックスの幅を設定 */
+}
+
+
+
+/* タグ一覧のコンテナのスタイル */
+.tag-list-container {
+    background-color: transparent; /* ボックスの背景色を透明に設定 */
+    color: #808080; /* テキストの色を薄灰色に設定 */
+    padding: 12px; /* ボックスの余白を設定 */
+    border-radius: 8px; /* 丸い角を8pxの半径で設定 */
+    margin: 10px 0 20px 5px; /* 上右下左の余白を設定 */
+    width: 242px; /* ボックスの幅を設定 */
+}
+  
+/* タグ一覧のリストのスタイル */
+.tag-list {
+    max-height: 320px; /* リストの最大高さを200pxに設定（オーバーフロー時にスクロールバー表示） */
+    overflow-y: auto; /* 垂直方向のスクロールバーを表示 */
+    scrollbar-width: thin; /* スクロールバーの太さを細く設定 */
+    scrollbar-color: #888888 #f4f4f4; /* スクロールバーカラーを設定 */
+}
+.tag-ist::-webkit-scrollbar {
+    width: 6px; /* スクロールバーの幅を設定 */
+    height: 500px;
+}
+.tag-ist::-webkit-scrollbar-track {
+    background: #FFFFFF; /* スクロールバートラックの背景色を設定 */
+    background: rgba(0,0,0,0);
+}
+.tag-ist::-webkit-scrollbar-thumb {
+    background-color: #888888; /* スクロールバーの背景色を設定 */
+    border-radius: 3px; /* スクロールバーサムの角を丸く設定 */
+    border: none; /* スクロールバーの枠線を設定 */
+}
+
+.selectedTag {
+    text-decoration: underline;
+}
+.tag-button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    text-decoration: none;
+}
+.tag-button:hover {
+    text-decoration: underline; /* カーソルがタグに合わさっているときにアンダーバーを表示 */
+}
+
+
+
+/* ユーザーのアイコン表示スタイル */
+.userContainer {
+    display: flex;
+    align-items: center;
+    position: fixed; /* ボタンの位置を固定化 */
+    top: 640px; /* 下部からの距離を設定 */
+    left: 10px; /* 右からの距離を設定 */
+  }
+
+  .userIcon {
+    width: 40px; /* 画像の幅を指定 */
+    height: 40px; /* 画像の高さを指定 */
+    margin: 0px 0px 0px 0px; /* 上右下左の余白を設定 */
+  }
+
+  .userId {
+    margin: 0px 0px 10px 10px; /* 上右下左の余白を設定 */
+    font-size: 20px; /* ユーザー名の文字サイズを指定 */
+  }
+
+
+
+/* 新規メモ作成ボタンのスタイル */
+.new-memo-button {
+    position: fixed; /* ボタンの位置を固定化 */
+    top: 700px; /* 上部からの距離を設定 */
+    left: 10px; /* 左からの距離を設定 */
+}

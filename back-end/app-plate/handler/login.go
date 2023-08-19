@@ -19,7 +19,7 @@ type apiMessage struct {
 
 func setMessage(w http.ResponseWriter, message string) {
 	apims := apiMessage{Message: message}
-	w.Header().Set("Content-Type", ContentJsonStr)
+	w.Header().Set("Content-Type", CONTENT_JSON_STR)
 
 	encoder := json.NewEncoder(w)
 	encoder.Encode(apims)
@@ -69,7 +69,7 @@ func loginGetHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", ContentJsonStr)
+	w.Header().Set("Content-Type", CONTENT_JSON_STR)
 	w.WriteHeader(http.StatusOK)
 
 }
@@ -139,7 +139,7 @@ func loginPutHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", ContentJsonStr)
+	w.Header().Set("Content-Type", CONTENT_JSON_STR)
 	w.WriteHeader(http.StatusOK)
 
 	lib.SetSessionUser(&sess, &user)

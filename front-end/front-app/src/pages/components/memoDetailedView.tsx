@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import { useState } from 'react';
 import useSWR from 'swr';
-import Memo from './memoTypeDef';
+import {MemoData} from './memoData';
 
-export default function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
+export default function MemoDetailedView({memo}: {memo?:MemoData}): JSX.Element{
   if(memo == null){
     return(
       <div className='detailedView m-1'>
@@ -30,7 +30,7 @@ export default function MemoDetailedView({memo}: {memo?:Memo}): JSX.Element{
         {memo.date}
       </div>
       <div className='tags'>
-        { memo.tags.map((tag) => "#"+tag+" ") }
+        { memo.tag.map((tag:string) => "#"+tag+" ") }
       </div>
     </div>
   );

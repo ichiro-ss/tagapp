@@ -4,12 +4,12 @@ import { Back_Index } from "./constants";
 import { LeftSideComponent } from "./components/leftsideComponent";
 import MemoList from "./components/memoList";
 import MemoDetailedView from "./components/memoDetailedView";
-import Memo from './components/memoTypeDef'
+import { MemoData } from "./components/memoData";
 
 export default function Home() {
 
   const title = "TestApp"
-  const [selectedMemo, setSelectedMemo] = useState<Memo | undefined>(undefined);
+  const [selectedMemo, setSelectedMemo] = useState<MemoData | undefined>(undefined);
 
 
   return (
@@ -23,7 +23,7 @@ export default function Home() {
             <div className="center-column col-5 h-100 border overflow-auto">
               <MemoList setSelectedMemo={setSelectedMemo}/>
             </div>
-            <div className="right-column col-5 h-100 border border-warning overflow-auto">
+            <div className="right-column col-5 h-100 border overflow-auto">
               <MemoDetailedView memo={selectedMemo}/>
             </div>
           </div>

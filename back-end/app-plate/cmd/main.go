@@ -27,9 +27,6 @@ func main() {
 	if db == nil {
 		fmt.Println("Database is nil pointer")
 	}
-	gotest.TestUserData()
-	gotest.TestMemoData()
-	gotest.TestTagData()
 
 	serverURL := "0.0.0.0:5000"
 	server := http.Server{

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -29,4 +30,18 @@ func SetCrosOptions(w http.ResponseWriter, r *http.Request) (isOptions bool) {
 	w.Header().Set("Content-Type", "application/json")
 
 	return
+}
+
+func setJsonData(w http.ResponseWriter, r *http.Request, target interface{}) error {
+	w.Header().Set("Content-Type", CONTENT_JSON_STR)
+
+	err := json.NewEncoder(w).Encode(target)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Jsonの書き込みに失敗しました"))
+		return err
+	}
+
+	return nil
 }

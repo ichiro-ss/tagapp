@@ -27,7 +27,7 @@ const MemoList = ( {setSelectedMemo}:{setSelectedMemo:any}) => {
                     onClick={() => handleMemoClick(memo)}
                 >
                     <h3 className={styles.memoTitle}>{truncateTitle(memo.title)}</h3>
-                    <p className={styles.memoTags}>{truncateTags(renderTags(memo.tags))}</p>
+                    <p className={styles.memoTags}>{truncateTags(renderTags(memo.tag))}</p>
                     <p className={styles.memoComment}>{truncateComment(memo.comment)}</p>
                     <p className={styles.memoDate}>{formatDate(memo.date)}</p>
                 </button>
