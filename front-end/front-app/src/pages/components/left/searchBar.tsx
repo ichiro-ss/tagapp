@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import styles from '../../../styles/leftside.module.css'; // スタイルを読み込む
+import styles from '../../../styles/leftside.module.css'; 
 
 type SearchBarProps = {
   onSearch: (searchTerm: string, tagOnly: boolean, andOperator: boolean) => void;
-  initialSearchTerm: string; // もしタグをクリックしたらここに渡される
+  initialSearchTerm: string;
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, initialSearchTerm }) => {
@@ -14,7 +14,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, initialSearchTerm }) =>
   const searchTagonlyCondition = `タグのみ: ${tagOnly}`
   const searchAndoperatorCondition = `AND検索: ${andOperator}`;
 
-  // searchTerm の変更時に initialSearchTerm も更新
   useEffect(() => {
     setSearchTerm(initialSearchTerm);
   }, [initialSearchTerm]);
@@ -23,15 +22,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, initialSearchTerm }) =>
     console.log(searchTermCondition);
     onSearch(searchTerm, tagOnly, andOperator);
   };
-  // const handleInputChange = (inputTerm: string) => {
-  //   setSearchTerm(inputTerm);
-  //   onSearch(inputTerm, false, false); // 検索バーの内容も更新するために onSearch を呼び出す
-  // };
-
 
 
   return (
-    <div className={styles["search-bar-container"]}> {/* スタイルを適用 */}
+    <div className={styles["search-bar-container"]}>
       <div>
         <input
           type="text"
