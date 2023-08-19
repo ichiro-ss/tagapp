@@ -97,7 +97,8 @@ func TestMemoData() {
 
 	new_tag := data.Tag{Id: 5, TagName: "e", UserId: userId, MemoNum: 1}
 	fmt.Printf("Memo%dのtagにeを追加します\n", memo1.Id)
-	err = memo1.CreateMemoTag(new_tag)
+	new_id, err := memo1.CreateMemoTag(new_tag)
+	new_tag.Id = new_id
 	if err != nil {
 		log.Fatal(err)
 		return
