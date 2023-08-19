@@ -1,4 +1,4 @@
-import { MemoData } from "./memoData"; // MemoData の型定義をインポート
+import { MemoData, memos } from "../memoData"; // MemoData の型定義をインポート
 
 export const handleSearch = (
   searchTerm: string,
