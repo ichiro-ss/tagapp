@@ -9,10 +9,10 @@ import (
 
 // <-------Tagオブジェクト-----
 type Tag struct {
-	Id      int `json:"id"`
-	TagName string
+	Id      int    `json:"id"`
+	TagName string `json:"name`
 	UserId  string
-	MemoNum int
+	MemoNum int `json:"memoNum"`
 }
 
 type TagMap struct {
@@ -81,7 +81,7 @@ func TagByID(id int) (Tag, error) {
 }
 
 // TagのUserIdによる取得関数
-func TagByUser(user_id int) ([]Tag, error) {
+func TagByUser(user_id string) ([]Tag, error) {
 	var tags []Tag
 
 	rows, err := db.Query("SELECT * FROM tag WHERE userId = ?", user_id)

@@ -142,6 +142,23 @@ export default function Home() {
             console.error(err)
         })
     }
+
+    const onGetTags = () => {
+        const url = Back_Index+`/api/tags?username=${userId}`
+
+        fetch(url, makeCROSRequest({}))
+        .then( res => {
+            if (res.ok) {
+                res.json().then(data => console.log(data) )
+            } else {
+                res.text().then(data => console.log(data) )
+            }
+        }) 
+        .catch( err => {
+            console.error(err)
+        })
+        
+    }
     return (
         <div>
             <Header title={title} />
@@ -180,6 +197,7 @@ export default function Home() {
 
                 <button type="button" className="btn btn-primary" onClick={OnSearchAllMemo}>SearchAllMemo</button>
                 <button type="button" className="btn btn-primary" onClick={OnSearchOption}>SearchMemoWithOption</button>
+                <button type="button" className="btn btn-primary" onClick={onGetTags}>GetTags</button>
             </form>
             <Link href="/tests/login">
                 <p>move to login page →</p>
