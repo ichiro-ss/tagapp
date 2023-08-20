@@ -1,9 +1,11 @@
 import Head from 'next/head'
 import { useState } from 'react';
 import useSWR from 'swr';
+import Button from 'react-bootstrap/Button';
 import {MemoData} from './memoData';
 
-export default function MemoDetailedView({memo}: {memo?:MemoData}): JSX.Element{
+//memoEditor, memoRemoverの実装はあと
+export default function MemoDetailedView({memo, memoEditor, memoRemover}: {memo?:MemoData, memoEditor?:any, memoRemover?:any}): JSX.Element{
   if(memo == null){
     return(
       <div className='detailedView m-1'>
@@ -15,6 +17,12 @@ export default function MemoDetailedView({memo}: {memo?:MemoData}): JSX.Element{
     <div className='detailedView m-1'>
       <div className='title'>
         <h1> {memo.title} </h1>
+        <Button onClick={memoRemover} variant="outline-danger" className="float-end m-2" >
+        🗑
+        </Button>
+        <Button onClick={memoEditor} variant="outline-secondary" className="float-end m-2" >
+        ⚙
+        </Button>
       </div>
       { memo.userid &&
         <div className='author'>

@@ -86,8 +86,7 @@ export default function Home() {
             </div>
             <Footer className="fixed-bottom"/>
           </div>
-        </div>  
+        </div>
     </div>
-    
   );
 }

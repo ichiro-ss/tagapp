@@ -96,12 +96,6 @@ export const LeftSideComponent = () => {
           </div>
         )}
       </div>
-
-      {/* ユーザー名とアイコンの表示 */}
-      <div>
-        <UserContainer />
-      </div>
-
       
       {/* メモ作成ボタン and メモ作成モーダル */}
       <OpenModalButton onOpen={handleOpenModal} />
