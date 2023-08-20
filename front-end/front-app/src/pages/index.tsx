@@ -7,7 +7,6 @@ import MemoList from "./components/memoList";
 import MemoDetailedView from "./components/memoDetailedView";
 import { MemoData,memos } from "./components/memoData";
 import { useRouter } from 'next/router';
-import Button from 'react-bootstrap/Button';
 
 const makeCROSRequest = (request : any) => {
   request.credentials = "include"

@@ -14,7 +14,7 @@ interface Props {
 
 export const LeftSideComponent = ( props:Props ) => {
 
-  let tempMemos:MemoData[];
+  const tempMemos:MemoData[]=memos;
   // メモ検索画面
   const [searchResults, setSearchResults] = useState<MemoData[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -34,7 +34,7 @@ export const LeftSideComponent = ( props:Props ) => {
     setSearchResults([]); // タグをクリックしたら検索結果をリセット
     onSearch(tag, false, true); // 検索バーの内容も更新するために onSearch を呼び出す
   };
-  
+
   const [showTags, setShowTags] = useState(false);
   const handleToggleTags = () => {
     setShowTags(!showTags);
