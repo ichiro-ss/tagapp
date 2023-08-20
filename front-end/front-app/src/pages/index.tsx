@@ -5,7 +5,7 @@ import { Back_Index } from "./constants";
 import { LeftSideComponent } from "./components/leftsideComponent";
 import MemoList from "./components/memoList";
 import MemoDetailedView from "./components/memoDetailedView";
-import { MemoData } from "./components/memoData";
+import { MemoData,memos } from "./components/memoData";
 import { useRouter } from 'next/router';
 import Button from 'react-bootstrap/Button';
 
@@ -76,7 +76,7 @@ export default function Home() {
           <div className="row vh-100">
             <Header title={title} className="fixed-top"/>
             <div className="left-column col-md-auto h-75 border-0 overflow-auto">
-              <LeftSideComponent />
+              <LeftSideComponent memos={memos}/>
             </div>
             <div className="center-column col h-75 border-0 overflow-auto">
               <MemoList setSelectedMemo={setSelectedMemo}/>

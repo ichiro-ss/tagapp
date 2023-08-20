@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { MemoData, memos } from "./memoData";
-import { sortedTags, tagCountMap } from "./left/tagCount";
 import TagToggle from "./left/tagToggle";
 import SearchBar from "./left/searchBar";
 import { handleSearch } from "./left/searchUtils";
@@ -9,10 +8,13 @@ import MemoModal from "./left/memoModal";
 import styles from '../../styles/leftside.module.css';
 import UserContainer from "./left/userName";
 
+interface Props {
+  memos:MemoData[],
+};
 
+export const LeftSideComponent = ( props:Props ) => {
 
-export const LeftSideComponent = () => {
-
+  let tempMemos:MemoData[];
   // メモ検索画面
   const [searchResults, setSearchResults] = useState<MemoData[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -23,7 +25,7 @@ export const LeftSideComponent = () => {
     andOperator: boolean
   ) => {
     const actualSearchTerm = selectedTag !== null ? selectedTag : searchTerm;
-    handleSearch(actualSearchTerm, tagOnly, andOperator, memos, setSearchResults);
+    handleSearch(actualSearchTerm, tagOnly, andOperator, tempMemos, setSearchResults);
   };
   // タグ一覧
   const handleTagClick = (tag: string) => {
@@ -37,6 +39,15 @@ export const LeftSideComponent = () => {
   const handleToggleTags = () => {
     setShowTags(!showTags);
   };
+
+  interface tagsMetaData { tagsCountMap:{[tag: string]:number}, sortedTags:string[] };
+  const [tagsInfo, setTagsInfo] = useState<tagsMetaData>({tagsCountMap:{},sortedTags:new Array});
+  useEffect(()=>{
+    const tagCount=tagCounter(props.memos);
+    const sortedTags=tagSorter(tagCount);
+    setTagsInfo( {tagsCountMap:tagCount, sortedTags:sortedTags} )
+    },
+  [props.memos])
 
   // 新規メモを作成するポップアップ画面
   const [showModal, setShowModal] = useState(false);
@@ -60,7 +71,7 @@ export const LeftSideComponent = () => {
         onSearch={onSearch}
         initialSearchTerm={selectedTag !== null ? selectedTag : searchTerm}
         />
-      {searchResults.length >= 0 && (
+      {/* {searchResults.length >= 0 && (
         <div>
           <ul>
             {searchResults.map((comment, index) => (
@@ -73,8 +84,7 @@ export const LeftSideComponent = () => {
             ))}
           </ul>
         </div>
-      )}
-      
+      )} */}
 
       {/* タグ一覧を表示 */}
       <div className={styles["tag-list-container"]}>
@@ -82,13 +92,13 @@ export const LeftSideComponent = () => {
         {showTags && (
           <div className={styles["tag-list"]}>
             <ul>
-              {sortedTags.map((tag, index) => (
+              {tagsInfo.sortedTags.map((tag, index) => (
                 <li key={index}>
                   <button
                     className={styles["tag-button"] + (selectedTag === tag ? ` ${styles.selectedTag}` : "")}
                     onClick={() => handleTagClick(tag)}
                   >
-                    {tag}({tagCountMap[tag]})
+                    {tag}({tagsInfo.tagsCountMap[tag]})
                   </button>
                 </li>
               ))}
@@ -105,6 +115,24 @@ export const LeftSideComponent = () => {
 
   );
 };
+
+function tagCounter(memos:MemoData[]){
+  const tagCountMap: { [tag: string]: number } = {};
+  memos.forEach((comment) => {
+    comment.tag.forEach((tag) => {
+      tagCountMap[tag] = (tagCountMap[tag] || 0) + 1;
+    });
+  });
+  return tagCountMap;
+}
+
+function tagSorter( tagCountMap:{[tag: string]:number}){
+  // タグの出現回数で降順にソート
+  const sortedTags = Object.keys(tagCountMap).sort(
+    (a, b) => tagCountMap[b] - tagCountMap[a]
+  );
+  return Object.keys(tagCountMap).sort( (a, b) => tagCountMap[b] - tagCountMap[a]);
+}
 
   
 function formatDate(date: number): string {
