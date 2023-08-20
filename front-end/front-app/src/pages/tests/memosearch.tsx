@@ -190,7 +190,7 @@ export default function Home() {
                 <div>
                     {
                         keywords.map((item, index) =>
-                            <p>Tag No{index}. {item}</p>
+                            <p>Key No{index}. {item}</p>
                         )
                     }
                 </div>
