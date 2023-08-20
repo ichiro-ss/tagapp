@@ -58,11 +58,12 @@ export const LeftSideComponent = ( props:Props ) => {
     console.log("tag fetch ok:");
     console.log(tmpTagData)
   }
+
   let tagsInfo:tagsMetaData
   if(tmpTagData!=null){
     tagsInfo=( {tagsCountMap:tmpTagData, sortedTags:tagSorter(tmpTagData)});
   }else{
-    tagsInfo=( {tagsCountMap:{"tagnull":1}, sortedTags:tagSorter({"tagnull":1})});
+    tagsInfo=( {tagsCountMap:{"tag_is_empty":0}, sortedTags:tagSorter({"tag_is_empty":0})});
   }
 
 
