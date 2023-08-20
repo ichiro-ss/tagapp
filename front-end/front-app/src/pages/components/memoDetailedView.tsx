@@ -3,6 +3,16 @@ import { useState } from 'react';
 import useSWR from 'swr';
 import Button from 'react-bootstrap/Button';
 import {MemoData} from './memoData';
+import { Back_Index } from '../constants';
+
+const makeCROSRequest = (request : any) => {
+  request.credentials = "include"
+  request.headers = {
+      "Access-Control-Allow-Credentials": "true",
+  } 
+  return request
+}
+
 
 //memoEditor, memoRemoverの実装はあと
 export default function MemoDetailedView({memo, memoEditor, memoRemover}: {memo?:MemoData, memoEditor?:any, memoRemover?:any}): JSX.Element{
@@ -46,9 +56,10 @@ export default function MemoDetailedView({memo, memoEditor, memoRemover}: {memo?
 
 function PreviewDoc({filepath}:{filepath:string}): JSX.Element{
   if(filepath===""){ return <></>; }
-
-  const fetcher = (url:string) => fetch(url).then(r => r.blob())
-  const {data, error, isLoading}=useSWR(filepath, fetcher);
+  const  fname = Back_Index+filepath
+  console.log("fname=",fname)
+  const fetcher = (url:string) => fetch(url,makeCROSRequest({})).then(r => r.blob())
+  const {data, error, isLoading}=useSWR(fname, fetcher);
 
   if(!!error) return <div>failed to load</div>;
   if(isLoading) return <div>loading...</div>;

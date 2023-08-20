@@ -77,6 +77,8 @@ const MemoModal = ({ show, onClose, onCreate }: MemoModalProps) => {
     .catch( err => {
         console.error(err)
     })
+
+    onClose();
  }
 
 

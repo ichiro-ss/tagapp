@@ -1,42 +1,49 @@
+import Header from "./header";
+import { Back_Index } from "../constants";
 import { useState, useEffect } from "react";
-import { MemoData, memos } from "./memoData";
+import Link from "next/link";
+import { MemoData} from "./memoData";
 import { sortedTags, tagCountMap } from "./left/tagCount";
 import TagToggle from "./left/tagToggle";
 import SearchBar from "./left/searchBar";
-import { handleSearch } from "./left/searchUtils";
+//import { handleSearch } from "./left/searchUtils";
 import OpenModalButton from "./left/openModalButton";
 import MemoModal from "./left/memoModal";
 import styles from '../../styles/leftside.module.css';
 import UserContainer from "./left/userName";
 
+interface LeftsideComponentProps{
+  setMemos: any
+}
 
+// CORSリクエストを生成するヘルパー関数
+const makeCROSRequest = (request: any) => {
+  request.credentials = "include"
+  request.headers = {
+      "Access-Control-Allow-Credentials": "true",
+  }
+  return request
+}
 
-export const LeftSideComponent = () => {
+export const LeftSideComponent: React.FC<LeftsideComponentProps> = (props) => {
+  const url = Back_Index + "/api/memo";
+  const [userId, setUserId] = useState("");
+  
 
+  // ユーザー情報を取得するためのEffect
+  const getUser = useEffect(() => {
+    console.log("GetUser")
+    fetch(Back_Index + "/api/login", makeCROSRequest({}))
+        .then(res => res.json())
+        .then(data => {
+            setUserId(data.id)
+            console.log("userId:", userId)
+        })
+  }, []);
   // メモ検索画面
   const [searchResults, setSearchResults] = useState<MemoData[]>([]);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const onSearch = (
-    searchTerm: string,
-    tagOnly: boolean,
-    andOperator: boolean
-  ) => {
-    const actualSearchTerm = selectedTag !== null ? selectedTag : searchTerm;
-    handleSearch(actualSearchTerm, tagOnly, andOperator, memos, setSearchResults);
-  };
-  // タグ一覧
-  const handleTagClick = (tag: string) => {
-    setSearchTerm(tag); // タグを検索バーに表示
-    setSelectedTag(tag); // タグがクリックされたら検索バーにタグをセットする
-    setSearchResults([]); // タグをクリックしたら検索結果をリセット
-    onSearch(tag, false, true); // 検索バーの内容も更新するために onSearch を呼び出す
-  };
-  
   const [showTags, setShowTags] = useState(false);
-  const handleToggleTags = () => {
-    setShowTags(!showTags);
-  };
+  
 
   // 新規メモを作成するポップアップ画面
   const [showModal, setShowModal] = useState(false);
@@ -50,43 +57,25 @@ export const LeftSideComponent = () => {
     console.log('新しいメモを作成:', memo);
   };
 
-  //ユーザー名とアイコンの表示
-  const userId = 'user123';
+
 
   return (
     <div>
       {/* 検索バーの配置 */}
-      <SearchBar 
-        onSearch={onSearch}
-        initialSearchTerm={selectedTag !== null ? selectedTag : searchTerm}
-        />
-      {searchResults.length >= 0 && (
-        <div>
-          <ul>
-            {searchResults.map((comment, index) => (
-              <li key={index}>
-                <h6>{comment.title}</h6>
-                <p>タグ: {comment.tag.join(", ")}</p>
-                <p>日時: {formatDate(comment.date)}</p>
-                <p>コメント: {comment.comment}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      
+        <SearchBar username={userId} setMemos={props.setMemos}/>
+
 
       {/* タグ一覧を表示 */}
       <div className={styles["tag-list-container"]}>
-        <h4><TagToggle onToggle={handleToggleTags} showTags={showTags} /></h4>
+      <h4><TagToggle onToggle={() => setShowTags(!showTags)} showTags={showTags} /></h4>
         {showTags && (
           <div className={styles["tag-list"]}>
             <ul>
               {sortedTags.map((tag, index) => (
                 <li key={index}>
                   <button
-                    className={styles["tag-button"] + (selectedTag === tag ? ` ${styles.selectedTag}` : "")}
-                    onClick={() => handleTagClick(tag)}
+                    className={styles["tag-button"]}
+
                   >
                     {tag}({tagCountMap[tag]})
                   </button>
