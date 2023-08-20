@@ -6,13 +6,15 @@ import { handleSearch } from "./left/searchUtils";
 import OpenModalButton from "./left/openModalButton";
 import MemoModal from "./left/memoModal";
 import styles from '../../styles/leftside.module.css';
-import UserContainer from "./left/userName";
+import useSWR from 'swr';
+import { Back_Index } from "../constants";
 
 interface Props {
   memos:MemoData[],
+  username:string
 };
 
-export const LeftSideComponent = ( props:Props ) => {
+export const LeftSideComponent = ( {props}:{props:Props} ) => {
 
   const tempMemos:MemoData[]=memos;
   // メモ検索画面
@@ -42,12 +44,22 @@ export const LeftSideComponent = ( props:Props ) => {
 
   interface tagsMetaData { tagsCountMap:{[tag: string]:number}, sortedTags:string[] };
   const [tagsInfo, setTagsInfo] = useState<tagsMetaData>({tagsCountMap:{},sortedTags:new Array});
-  useEffect(()=>{
-    const tagCount=tagCounter(props.memos);
-    const sortedTags=tagSorter(tagCount);
-    setTagsInfo( {tagsCountMap:tagCount, sortedTags:sortedTags} )
-    },
-  [props.memos])
+
+  // useEffect(()=>{
+  //   const tagCount=tagCounter(props.memos);
+  //   const sortedTags=tagSorter(tagCount);
+  //   setTagsInfo( {tagsCountMap:tagCount, sortedTags:sortedTags} )
+  //   },
+  // [props.memos])
+
+  const tagAPIUrl=Back_Index+"/api/tags";
+  const fetcher = (url:string) => fetch(url).then(r => r.json())
+  const {data:tmpTagData, error, isLoading}=useSWR(tagAPIUrl, fetcher);
+  if(!isLoading){
+    console.log("tag fetch ok:");
+    // const sortedTags= tmpTagData && tagSorter(tmpTagData);
+    // setTagsInfo( {tagsCountMap:tmpTagData, sortedTags});
+  };
 
   // 新規メモを作成するポップアップ画面
   const [showModal, setShowModal] = useState(false);
