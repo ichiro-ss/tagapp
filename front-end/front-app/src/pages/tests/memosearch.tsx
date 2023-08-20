@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { MemoData } from "../components/memoData"
 
+
+// CORSリクエストを生成するヘルパー関数
 const makeCROSRequest = (request: any) => {
     request.credentials = "include"
     request.headers = {
@@ -12,6 +14,7 @@ const makeCROSRequest = (request: any) => {
     return request
 }
 
+// スペースで区切られた文字列をタグの配列に変換するヘルパー関数
 const makeMemoTags = (str: string): string[] => {
     let tags: string[] = str.split(" ")
     const tagNames = []
@@ -54,6 +57,7 @@ const convertJsonToMemoData = (data : any) => {
     return memodata
 }
 
+// メモの検索や表示を行うコンポーネント
 export default function Home() {
     const title = "Memo Test Page"
     const url = Back_Index + "/api/memo"
@@ -62,6 +66,7 @@ export default function Home() {
     const [keywords, setKeywords] = useState<string[]>([])
     const [startDate, setStratDate] = useState<Date>()
 
+    // ユーザー情報を取得するためのEffect
     const getUser = useEffect(() => {
         console.log("GetUser")
         fetch(Back_Index + "/api/login", makeCROSRequest({}))
@@ -75,25 +80,29 @@ export default function Home() {
             })
     }, []);
 
+    // メモの編集？いらない？いるかも
+    // テキスト入力の変更を処理するハンドラー
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setFunc: any) => {
         setFunc(event.target.value)
     }
-
+     // タグの入力変更を処理するハンドラー
     const handleInputCahngeTags = (event: React.ChangeEvent<HTMLInputElement>) => {
         const tagNames = makeMemoTags(event.target.value)
         setTags(tagNames)
     }
+    // キーワードの入力値を更新するハンドラー関数
     const handleInputCahngeKeywords = (event: React.ChangeEvent<HTMLInputElement>) => {
         const tagNames = makeMemoTags(event.target.value)
         setKeywords(tagNames)
     }
-
+    // 開始日の入力値を更新するハンドラー関数
     const handleInputCahngeStartDate = (event: React.ChangeEvent<HTMLInputElement>) => {
         const startDate = new Date(event.target.value)
         setStratDate(startDate)
     }
-
-    const OnSearchAllMemo= () => {
+    // すべてのメモを検索する関数
+    const OnSearchAllMemo= (e : any ) => {
+        e.preventDefault()
         const url = Back_Index+`/api/memosearch`
 
         const form = new FormData()
@@ -133,6 +142,8 @@ export default function Home() {
         })
     }
 
+
+    // オプションを指定してメモを検索する関数
     const OnSearchOption= (e : any ) => {
         e.preventDefault()
         const url = Back_Index+`/api/memosearch`
