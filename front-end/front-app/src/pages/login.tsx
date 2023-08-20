@@ -119,25 +119,17 @@ export default function login() {
         </form>
       </div>
       <Modal show={showLogout}>
-          {/* <Modal.Header closeButton>
-            <Modal.Title>Notice</Modal.Title>
-          </Modal.Header> */}
         <Modal.Body>
           <h3>Logout</h3><br/>
           <Button variant="secondary" onClick={handleCloseLogout}>
               Close
           </Button>
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseLogout}>
-            Close
-          </Button>
-        </Modal.Footer> */}
       </Modal>
       <Modal show={showSubmit}>
         <Modal.Body>
           <h3>Submit success!!</h3><br/>
-          <Button variant="primary" onClick={handleCloseLogout}>
+          <Button variant="primary" onClick={handleCloseSubmit}>
             close
           </Button>
         </Modal.Body>
