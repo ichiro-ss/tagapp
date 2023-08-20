@@ -16,8 +16,6 @@ const makeCROSRequest = (request : any) => {
   return request
 }
 
-
-
 export default function Home() {
   const title = "TagApp"
   const [isLoggedIn , setIsLoggedIn]=useState<boolean|undefined>(undefined);

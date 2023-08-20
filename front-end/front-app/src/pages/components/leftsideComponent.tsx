@@ -43,8 +43,7 @@ export const LeftSideComponent = ( props:Props ) => {
   };
 
   interface tagsMetaData { tagsCountMap:{[tag: string]:number}, sortedTags:string[] };
-  const [tagsInfo, setTagsInfo] = useState<tagsMetaData>({tagsCountMap:{},sortedTags:new Array});
-
+  // const [tagsInfo, setTagsInfo] = useState<tagsMetaData>({tagsCountMap:{},sortedTags:new Array});
   // useEffect(()=>{
   //   const tagCount=tagCounter(props.memos);
   //   const sortedTags=tagSorter(tagCount);
@@ -57,9 +56,15 @@ export const LeftSideComponent = ( props:Props ) => {
   const {data:tmpTagData, error, isLoading}=useSWR(tagAPIUrl, fetcher);
   if(!isLoading){
     console.log("tag fetch ok:");
-    // const sortedTags= tmpTagData && tagSorter(tmpTagData);
-    // setTagsInfo( {tagsCountMap:tmpTagData, sortedTags});
-  };
+    console.log(tmpTagData)
+  }
+  let tagsInfo:tagsMetaData
+  if(tmpTagData!=null){
+    tagsInfo=( {tagsCountMap:tmpTagData, sortedTags:tagSorter(tmpTagData)});
+  }else{
+    tagsInfo=( {tagsCountMap:{"tagnull":1}, sortedTags:tagSorter({"tagnull":1})});
+  }
+
 
   // 新規メモを作成するポップアップ画面
   const [showModal, setShowModal] = useState(false);
