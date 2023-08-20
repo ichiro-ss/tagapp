@@ -58,7 +58,11 @@ func validTagNames(tagNames []string) (valifiedTagNames []string) {
 
 	for _, value := range tagNames {
 		valifiedValue := strings.TrimSpace(value)
+		if valifiedValue == "" {
+			continue
+		}
 		_, exists := tagNamesSet[valifiedValue]
+
 		if !exists {
 			valifiedTagNames = append(valifiedTagNames, valifiedValue)
 			tagNamesSet[valifiedValue] = true

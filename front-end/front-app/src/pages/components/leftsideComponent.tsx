@@ -8,9 +8,6 @@ import OpenModalButton from "./left/openModalButton";
 import MemoModal from "./left/memoModal";
 import styles from '../../styles/leftside.module.css';
 import UserContainer from "./left/userName";
-
-
-
 export const LeftSideComponent = () => {
 
   // メモ検索画面
@@ -32,7 +29,7 @@ export const LeftSideComponent = () => {
     setSearchResults([]); // タグをクリックしたら検索結果をリセット
     onSearch(tag, false, true); // 検索バーの内容も更新するために onSearch を呼び出す
   };
-  
+
   const [showTags, setShowTags] = useState(false);
   const handleToggleTags = () => {
     setShowTags(!showTags);
