@@ -14,7 +14,7 @@ interface Props {
   username:string
 };
 
-export const LeftSideComponent = ( {props}:{props:Props} ) => {
+export const LeftSideComponent = ( props:Props ) => {
 
   const tempMemos:MemoData[]=memos;
   // メモ検索画面

@@ -75,7 +75,7 @@ export default function Home() {
           <div className="row vh-100">
             <Header title={title} className="fixed-top"/>
             <div className="left-column col-md-auto h-75 border-0 overflow-auto">
-              <LeftSideComponent props={{memos, username}}/>
+              <LeftSideComponent memos={memos} username={username}/>
             </div>
             <div className="center-column col h-75 border-0 overflow-auto">
               <MemoList setSelectedMemo={setSelectedMemo}/>
