@@ -2,6 +2,7 @@ import Header from "../components/header"
 import { Back_Index } from "../constants"
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { MemoData } from "../components/memoData"
 
 const makeCROSRequest = (request: any) => {
     request.credentials = "include"
@@ -21,6 +22,38 @@ const makeMemoTags = (str: string): string[] => {
     return tagNames
 }
 
+const convertJsonToMemoData = (data : any) => {
+
+    const memo = data.Memo
+    const title = memo.Title
+    const date = new Date(memo.CreatedAt)
+    const dateStr = date.toLocaleString()
+    const id = parseInt(memo.id)
+    let picpath =  ""
+
+    if ( memo.PicPath === "undefined" ) {
+        picpath = ""
+    } else {
+        picpath = memo.PicPath.substring(1)
+    }
+    const comment = memo.Content
+    const userid = memo.UserId
+
+    const tags = data.Tags
+
+    const memodata : MemoData = {
+        title : title,
+        userid : userid,
+        comment : comment,
+        filepath : picpath,
+        id : id,
+        date : dateStr,
+        tag : tags,
+    }
+
+    return memodata
+}
+
 export default function Home() {
     const title = "Memo Test Page"
     const url = Back_Index + "/api/memo"
@@ -36,6 +69,9 @@ export default function Home() {
             .then(data => {
                 setUserId(data.id)
                 console.log("userId:", userId)
+            })
+            .catch( err => {
+                console.log(err)
             })
     }, []);
 
@@ -57,8 +93,7 @@ export default function Home() {
         setStratDate(startDate)
     }
 
-    const OnSearchAllMemo= (e : any ) => {
-        e.preventDefault()
+    const OnSearchAllMemo= () => {
         const url = Back_Index+`/api/memosearch`
 
         const form = new FormData()
@@ -86,6 +121,10 @@ export default function Home() {
                 res.json().then( data => {
                     console.log("検索に成功しました")
                     console.log(data)
+
+                    for ( const memo of data ) {
+                        console.log(convertJsonToMemoData(memo))
+                    }
                 })
             }
         })

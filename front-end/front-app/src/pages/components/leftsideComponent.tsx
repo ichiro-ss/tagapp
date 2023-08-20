@@ -8,7 +8,12 @@ import OpenModalButton from "./left/openModalButton";
 import MemoModal from "./left/memoModal";
 import styles from '../../styles/leftside.module.css';
 import UserContainer from "./left/userName";
-export const LeftSideComponent = () => {
+
+interface LeftSideComponentProps {
+  username : string;
+};
+
+export const LeftSideComponent : React.FC<LeftSideComponentProps> = (props) => {
 
   // メモ検索画面
   const [searchResults, setSearchResults] = useState<MemoData[]>([]);
@@ -64,7 +69,7 @@ export const LeftSideComponent = () => {
               <li key={index}>
                 <h6>{comment.title}</h6>
                 <p>タグ: {comment.tag.join(", ")}</p>
-                <p>日時: {formatDate(comment.date)}</p>
+                <p>日時: {comment.date}</p>
                 <p>コメント: {comment.comment}</p>
               </li>
             ))}
