@@ -61,6 +61,9 @@ func loginGetHandle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", CONTENT_JSON_STR)
+
 	encoder := json.NewEncoder(w)
 	err = encoder.Encode(user)
 	if err != nil {
@@ -68,9 +71,6 @@ func loginGetHandle(w http.ResponseWriter, r *http.Request) {
 		setMessage(w, "Jsonへの変換ができませんでした")
 		return
 	}
-
-	w.Header().Set("Content-Type", CONTENT_JSON_STR)
-	w.WriteHeader(http.StatusOK)
 
 }
 

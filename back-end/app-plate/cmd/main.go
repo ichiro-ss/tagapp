@@ -19,6 +19,7 @@ func setHandle() {
 	http.HandleFunc("/api/logout", handler.LogoutHandler)
 	http.HandleFunc("/api/memo", handler.MemoHandler)
 	http.HandleFunc("/api/memosearch", handler.MemoSearchHanlder)
+	http.HandleFunc("/api/tags", handler.TagHandler)
 }
 
 func main() {
