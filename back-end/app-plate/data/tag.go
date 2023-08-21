@@ -10,7 +10,7 @@ import (
 // <-------Tagオブジェクト-----
 type Tag struct {
 	Id      int    `json:"id"`
-	TagName string `json:"name`
+	TagName string `json:"name"`
 	UserId  string
 	MemoNum int `json:"memoNum"`
 }

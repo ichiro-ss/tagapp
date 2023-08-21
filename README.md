@@ -104,10 +104,10 @@ go get [追加したいライブラリのURL]
 ```
 
 ## Node.jsのライブラリ追加
-(多分)front-appフォルダで以下のコマンドを実行することで追加されると思います。
+dockerのtagapp-front-appコンテナに入り，以下のコマンドを実行することで追加されます。
 
 ```
-npm install [追加いライブラリ名]
+npm install [追加したいライブラリ名]
 ```
 
 ## CORS(Cross-Origin Rsource Sharing対策)
