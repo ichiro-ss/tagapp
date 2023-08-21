@@ -3,17 +3,18 @@ import { Back_Index } from "../constants";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MemoData} from "./memoData";
-import { sortedTags, tagCountMap } from "./left/tagCount";
 import TagToggle from "./left/tagToggle";
 import SearchBar from "./left/searchBar";
 //import { handleSearch } from "./left/searchUtils";
 import OpenModalButton from "./left/openModalButton";
 import MemoModal from "./left/memoModal";
 import styles from '../../styles/leftside.module.css';
-import UserContainer from "./left/userName";
+import { convertTagJsonArrayToTagDataArray } from "./tagData";
+import { TagData } from "./tagData";
 
 interface LeftsideComponentProps{
   setMemos: any
+  memos: MemoData[]
 }
 
 // CORSリクエストを生成するヘルパー関数
@@ -58,6 +59,21 @@ export const LeftSideComponent: React.FC<LeftsideComponentProps> = (props) => {
   };
 
 
+  const [sortedTags, setSortedTags] = useState<TagData[]>([])
+
+  useEffect( () => {
+    const url = Back_Index+`/api/tags?username=${userId}`
+    fetch(url, makeCROSRequest({}))
+    .then( res => {
+      if (res.ok) {
+        res.json()
+        .then(data=>{
+          setSortedTags(convertTagJsonArrayToTagDataArray(data)) 
+        })
+      }
+    })
+  }, [props.memos])
+
 
   return (
     <div>
@@ -77,7 +93,7 @@ export const LeftSideComponent: React.FC<LeftsideComponentProps> = (props) => {
                     className={styles["tag-button"]}
 
                   >
-                    {tag}({tagCountMap[tag]})
+                    {tag.tagName}({tag.memoNum})
                   </button>
                 </li>
               ))}

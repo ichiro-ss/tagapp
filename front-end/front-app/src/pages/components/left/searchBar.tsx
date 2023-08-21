@@ -2,21 +2,13 @@ import React, { useState, useEffect } from "react";
 import Header from "../header";
 import { Back_Index } from "../../constants";
 import Link from "next/link";
-import { MemoData } from "../memoData";
+import { MemoData, convertMemoJsonArrayToMemoDataArray } from "../memoData";
 import styles from '../../../styles/leftside.module.css'; 
+import { makeCROSRequest } from "@/lib/helper";
 
 interface searchBarProps{
   username: string;
   setMemos: any
-}
-
-// CORSリクエストを生成するヘルパー関数
-const makeCROSRequest = (request: any) => {
-  request.credentials = "include"
-  request.headers = {
-      "Access-Control-Allow-Credentials": "true",
-  }
-  return request
 }
 
 // type SearchBarProps = {
@@ -65,7 +57,7 @@ const SearchBar: React.FC<searchBarProps> = (props) => {
             res.json().then( data => {
                 console.log("検索に成功しました")
                 console.log(data)
-                const memos = memoArray(data)
+                const memos = convertMemoJsonArrayToMemoDataArray(data)
                 props.setMemos(memos)
             })
         }
@@ -130,7 +122,7 @@ const SearchBar: React.FC<searchBarProps> = (props) => {
             res.json().then( data => {
                 console.log("検索に成功しました")
                 console.log(data)
-                const memos = memoArray(data)
+                const memos = convertMemoJsonArrayToMemoDataArray(data)
                 props.setMemos(memos)
             })
         }
@@ -139,50 +131,6 @@ const SearchBar: React.FC<searchBarProps> = (props) => {
         console.error(err)
     })
   }
-  // jsonをmemodata型に変換
-  const convertJsonToMemoData = (data : any) => {
-    const memo = data.Memo
-    const title = memo.Title
-    const date = new Date(memo.CreatedAt)
-    const dateStr = date.toLocaleString()
-    const id = parseInt(memo.id)
-    let picpath =  ""
-
-    if ( memo.PicPath === "undefined" ) {
-        picpath = ""
-    } else {
-        picpath = memo.PicPath.substring(1)
-    }
-    const comment = memo.Content
-    const userid = memo.UserId
-
-    const tags = data.Tags
-
-    const memodata : MemoData = {
-        title : title,
-        userid : userid,
-        comment : comment,
-        filepath : picpath,
-        id : id,
-        date : dateStr,
-        tag : tags,
-    }
-    return memodata
-  }
-  const memoArray = (data :any): MemoData[] => {
-    const memos:MemoData[] = [];
-    // console.log("data=",data.length)
-    if(data===null){
-      return memos;
-    }
-    for(let i = 0;i<data.length;i++){
-      memos.push(convertJsonToMemoData(data[i]));
-    }
-    return memos;
-  }
-  
-  
-  
 
 
   return (

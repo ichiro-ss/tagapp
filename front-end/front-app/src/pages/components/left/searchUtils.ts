@@ -1,4 +1,4 @@
-import { MemoData, memos } from "../memoData";
+import { MemoData} from "../memoData";
 
 export const handleSearch = (
   searchTerm: string,

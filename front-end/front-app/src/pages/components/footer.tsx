@@ -4,12 +4,13 @@ import UserContainer from "./left/userName";
 
 interface FooterProps {
   className?: string; // className プロパティを追加
+  username : string;
 };
 
 const Footer: React.FC<FooterProps> = (props) => {
     return (
       <div>
-          <UserContainer />
+          <UserContainer username={props.username}/>
       <footer className={`${styles["footer"]} ${props.className || ''} `}>
         <p>&copy; 2023 Your Company Name</p>
       </footer>

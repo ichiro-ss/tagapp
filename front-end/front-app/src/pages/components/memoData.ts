@@ -8,66 +8,46 @@ export type MemoData = {
     tag: string[];
 };
   
-export const memos: MemoData[] = [
-// {
-//     tag: ["タグ1", "タグ2", "タグ3"],
-//     date: 20230816103045,
-//     title: "タイトル",
-//     comment: "ここにコメントを記述",
-// },
-// {
-//     tag: ["映画", "インド"],
-//     date: 20230816111520,
-//     title: "RRR",
-//     comment: "面白すぎる，，，インド映画にはまったきっかけ",
-// },
-// {
-//     tag: ["ゲーム", "スマホ", "ポケモン"],
-//     date: 20230816111700,
-//     title: "ポケモンスリープ",
-//     comment: "イーブイかわいい",
-// },
-// {
-//     tag: ["映画", "本", "ジブリ"],
-//     date: 20230817111700,
-//     title: "君たちはどう生きるか",
-//     comment: "本は良かった．なお映画",
-// },
-// {
-//     tag: ["映画", "ポケモン"],
-//     date: 20230814111700,
-//     title: "ミュウと波動の勇者ルカリオ",
-//     comment: "かっこいー",
-// },
-// {
-//     tag: ["ゲーム", "ポケモン"],
-//     date: 20230814111700,
-//     title: "ポケモンダイアモンド・パール",
-//     comment: "めっちゃ楽しい！映画化したけど見に行こうかな",
-// },
-// {
-//     tag: ["ごはん", "パスタ"],
-//     date: 20230817111700,
-//     title: "パスタ",
-//     comment: "久しぶりに家でパスタたべた！",
-// },
-// {
-//     tag: ["ごはん", "パスタ", "研究室飯"],
-//     date: 20230602111700,
-//     title: "パスタ",
-//     comment: "粉チーズとハバネロ入れるとやっぱそれっぽくなるよね",
-// },
-// {
-//     tag: ["映画", "ミュージカル"],
-//     date: 2006002111700,
-//     title: "メリーポピンズ",
-//     comment: "おもしろかったです！",
-// },
-// {
-//     tag: ["映画", "ミュージカル"],
-//     date: 20230502111700,
-//     title: "グレイテスト・ショーマン",
-//     comment: "唯一二回映画館で観た",
-// },
+const convertMemoJsonToMemoData  = ( data: any ) : MemoData => {
+    const memo = data.Memo
+    const title = memo.Title
+    const date = new Date(memo.CreatedAt)
+    const dateStr = date.toLocaleString()
+    const id = parseInt(memo.id)
+    let picpath =  ""
 
-];
+    if ( memo.PicPath === "undefined" ) {
+        picpath = ""
+    } else {
+        picpath = memo.PicPath.substring(1)
+    }
+    const comment = memo.Content
+    const userid = memo.UserId
+
+    const tags = data.Tags
+
+    const memodata : MemoData = {
+        title : title,
+        userid : userid,
+        comment : comment,
+        filepath : picpath,
+        id : id,
+        date : dateStr,
+        tag : tags,
+    }
+    return memodata
+}
+
+export const convertMemoJsonArrayToMemoDataArray = ( dataArray : any ) : MemoData[] => {
+    const memoDataArray : MemoData[] = []
+
+    if ( dataArray == null ) {
+        return memoDataArray;
+    }
+    
+    for ( const data of dataArray ) {
+        memoDataArray.push(convertMemoJsonToMemoData(data))
+    }
+
+    return memoDataArray;
+}

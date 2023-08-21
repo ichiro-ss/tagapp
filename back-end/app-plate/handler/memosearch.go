@@ -409,12 +409,6 @@ func searchMemoHandle(w http.ResponseWriter, r *http.Request) {
 	results := searchMemoWithParam(&params)
 	results = searchMemoByIndex(params.PageIdx, params.PageItemAmount, results)
 
-	// fmt.Println("results : ", results)
-	// fmt.Println("")
-	// fmt.Println("results[0] : ", results[0])
-	// fmt.Println("createdAt :", results[0].Memo.CreatedAt)
-	// w.Header().Set("Content-Type", CONTENT_JSON_STR)
-
 	err = setJsonData(w, r, results)
 	if err != nil {
 		return

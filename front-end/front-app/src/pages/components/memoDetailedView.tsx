@@ -4,15 +4,7 @@ import useSWR from 'swr';
 import Button from 'react-bootstrap/Button';
 import {MemoData} from './memoData';
 import { Back_Index } from '../constants';
-
-const makeCROSRequest = (request : any) => {
-  request.credentials = "include"
-  request.headers = {
-      "Access-Control-Allow-Credentials": "true",
-  } 
-  return request
-}
-
+import { makeCROSRequest } from '@/lib/helper';
 
 //memoEditor, memoRemoverの実装はあと
 export default function MemoDetailedView({memo, memoEditor, memoRemover}: {memo?:MemoData, memoEditor?:any, memoRemover?:any}): JSX.Element{
@@ -57,9 +49,12 @@ export default function MemoDetailedView({memo, memoEditor, memoRemover}: {memo?
 function PreviewDoc({filepath}:{filepath:string}): JSX.Element{
   if(filepath===""){ return <></>; }
   const  fname = Back_Index+filepath
-  console.log("fname=",fname)
   const fetcher = (url:string) => fetch(url,makeCROSRequest({})).then(r => r.blob())
   const {data, error, isLoading}=useSWR(fname, fetcher);
+
+  const iflamestyles = {
+    
+  }
 
   if(!!error) return <div>failed to load</div>;
   if(isLoading) return <div>loading...</div>;
@@ -75,7 +70,7 @@ function PreviewDoc({filepath}:{filepath:string}): JSX.Element{
   // }
   return(
     <div>
-      <iframe id='inlineDoc' title='Inline image' className='w-100' src={URL.createObjectURL(data)}/>
+      <img id='inlineDoc' title='Inline image' className='w-100' src={URL.createObjectURL(data)}/>
       {/* PDFはこのままでは見ずらい PDF.js? */}
     </div>
   );
