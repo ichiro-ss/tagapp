@@ -1,14 +1,7 @@
-export type MemoData = {
-    title: string;
-    userid ?:string,
-    comment: string;
-    filepath ?:string,
-    id ?:number,
-    date: string; // 例: 20230816103045
-    tag: string[];
-};
-  
-const convertMemoJsonToMemoData  = ( data: any ) : MemoData => {
+import { MemoData } from "../components/memoData";
+
+const convertJsonToMemoData = (data : any) => {
+
     const memo = data.Memo
     const title = memo.Title
     const date = new Date(memo.CreatedAt)
@@ -35,19 +28,6 @@ const convertMemoJsonToMemoData  = ( data: any ) : MemoData => {
         date : dateStr,
         tag : tags,
     }
+
     return memodata
-}
-
-export const convertMemoJsonArrayToMemoDataArray = ( dataArray : any ) : MemoData[] => {
-    const memoDataArray : MemoData[] = []
-
-    if ( dataArray == null ) {
-        return memoDataArray;
-    }
-    
-    for ( const data of dataArray ) {
-        memoDataArray.push(convertMemoJsonToMemoData(data))
-    }
-
-    return memoDataArray;
 }

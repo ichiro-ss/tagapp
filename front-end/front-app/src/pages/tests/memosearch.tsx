@@ -2,7 +2,10 @@ import Header from "../components/header"
 import { Back_Index } from "../constants"
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { MemoData } from "../components/memoData"
 
+
+// CORSリクエストを生成するヘルパー関数
 const makeCROSRequest = (request: any) => {
     request.credentials = "include"
     request.headers = {
@@ -11,6 +14,7 @@ const makeCROSRequest = (request: any) => {
     return request
 }
 
+// スペースで区切られた文字列をタグの配列に変換するヘルパー関数
 const makeMemoTags = (str: string): string[] => {
     let tags: string[] = str.split(" ")
     const tagNames = []
@@ -21,6 +25,39 @@ const makeMemoTags = (str: string): string[] => {
     return tagNames
 }
 
+const convertJsonToMemoData = (data : any) => {
+
+    const memo = data.Memo
+    const title = memo.Title
+    const date = new Date(memo.CreatedAt)
+    const dateStr = date.toLocaleString()
+    const id = parseInt(memo.id)
+    let picpath =  ""
+
+    if ( memo.PicPath === "undefined" ) {
+        picpath = ""
+    } else {
+        picpath = memo.PicPath.substring(1)
+    }
+    const comment = memo.Content
+    const userid = memo.UserId
+
+    const tags = data.Tags
+
+    const memodata : MemoData = {
+        title : title,
+        userid : userid,
+        comment : comment,
+        filepath : picpath,
+        id : id,
+        date : dateStr,
+        tag : tags,
+    }
+
+    return memodata
+}
+
+// メモの検索や表示を行うコンポーネント
 export default function Home() {
     const title = "Memo Test Page"
     const url = Back_Index + "/api/memo"
@@ -29,6 +66,7 @@ export default function Home() {
     const [keywords, setKeywords] = useState<string[]>([])
     const [startDate, setStratDate] = useState<Date>()
 
+    // ユーザー情報を取得するためのEffect
     const getUser = useEffect(() => {
         console.log("GetUser")
         fetch(Back_Index + "/api/login", makeCROSRequest({}))
@@ -37,26 +75,32 @@ export default function Home() {
                 setUserId(data.id)
                 console.log("userId:", userId)
             })
+            .catch( err => {
+                console.log(err)
+            })
     }, []);
 
+    // メモの編集？いらない？いるかも
+    // テキスト入力の変更を処理するハンドラー
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setFunc: any) => {
         setFunc(event.target.value)
     }
-
+     // タグの入力変更を処理するハンドラー
     const handleInputCahngeTags = (event: React.ChangeEvent<HTMLInputElement>) => {
         const tagNames = makeMemoTags(event.target.value)
         setTags(tagNames)
     }
+    // キーワードの入力値を更新するハンドラー関数
     const handleInputCahngeKeywords = (event: React.ChangeEvent<HTMLInputElement>) => {
         const tagNames = makeMemoTags(event.target.value)
         setKeywords(tagNames)
     }
-
+    // 開始日の入力値を更新するハンドラー関数
     const handleInputCahngeStartDate = (event: React.ChangeEvent<HTMLInputElement>) => {
         const startDate = new Date(event.target.value)
         setStratDate(startDate)
     }
-
+    // すべてのメモを検索する関数
     const OnSearchAllMemo= (e : any ) => {
         e.preventDefault()
         const url = Back_Index+`/api/memosearch`
@@ -86,6 +130,10 @@ export default function Home() {
                 res.json().then( data => {
                     console.log("検索に成功しました")
                     console.log(data)
+
+                    for ( const memo of data ) {
+                        console.log(convertJsonToMemoData(memo))
+                    }
                 })
             }
         })
@@ -94,6 +142,8 @@ export default function Home() {
         })
     }
 
+
+    // オプションを指定してメモを検索する関数
     const OnSearchOption= (e : any ) => {
         e.preventDefault()
         const url = Back_Index+`/api/memosearch`

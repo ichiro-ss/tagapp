@@ -1,25 +1,31 @@
 import React, { useState } from "react";
-import { MemoData, memos } from "./memoData"; // ←ここをmemos全部じゃなくて，検索で引っかかったやつだけにする？
+import { MemoData} from "./memoData"; // ←ここをmemos全部じゃなくて，検索で引っかかったやつだけにする？
 import styles from "../../styles/memoList.module.css";
- 
-const MemoList = ( {setSelectedMemo}:{setSelectedMemo:any}) => {
+
+interface MemoListProps {
+  memos: MemoData[];
+  setSelectedMemo: (memo: MemoData) => void;
+};
+
+const MemoList: React.FC<MemoListProps> = (props) => {
     const [sortByNewest, setSortByNewest] = useState(true); // 初期値を新しい順に設定
     const [displayInGrid, setDisplayInGrid] = useState(true); // 初期値をグリッド表示に設定
 
     const handleMemoClick = (memo: MemoData) => {
-      setSelectedMemo(memo);
+      props.setSelectedMemo(memo);
     };
 
     // const newSortedMemos = [...memos].sort((a, b) => b.date - a.date);
     // const oldSortedMemos = [...memos].sort((a, b) => b.date - a.date);
-    const sortedMemos = [...memos].sort((a, b) => {
-        // ソート方法に応じて比較
-        if (sortByNewest) {
-          return b.date - a.date;
-        } else {
-          return a.date - b.date;
-        }
-      });
+    // const sortedMemos = [...props.memos].sort((a, b) => {
+    //     // ソート方法に応じて比較
+    //     if (sortByNewest) {
+    //       return b.date - a.date;
+    //     } else {
+    //       return a.date - b.date;
+    //     }
+    //   });
+    const sortedMemos = props.memos
 
     const toggleSortOrder = () => {
         setSortByNewest((prevSort) => !prevSort); // ソート方法をトグル
@@ -128,12 +134,15 @@ const truncateTags = (tags: string) => {
 
 // タグの表記を "#タグ1 #タグ2" の形式にフォーマットする関数
 const renderTags = (tags: string[]) => {
+    if(tags===null){
+      return "";
+    }
     const tagStrings = tags.map(tag => `#${tag}`).join(" ");
     return `${tagStrings}`;
   };
 
 // 例: 20230816103045 を "2023/08/16 10:30:45" の形式にフォーマットする関数
-const formatDate = (dateNumber: number) => {
+const formatDate = (dateNumber: string) => {
   const dateStr = dateNumber.toString();
   const year = dateStr.substring(0, 4);
   const month = dateStr.substring(4, 6);
