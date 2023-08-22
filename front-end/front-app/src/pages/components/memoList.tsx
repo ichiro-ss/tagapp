@@ -142,15 +142,16 @@ const renderTags = (tags: string[]) => {
   };
 
 // 例: 20230816103045 を "2023/08/16 10:30:45" の形式にフォーマットする関数
-const formatDate = (dateNumber: string) => {
-  const dateStr = dateNumber.toString();
-  const year = dateStr.substring(0, 4);
-  const month = dateStr.substring(4, 6);
-  const day = dateStr.substring(6, 8);
-  const hour = dateStr.substring(8, 10);
-  const minute = dateStr.substring(10, 12);
-  const second = dateStr.substring(12, 14);
-  return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
+const formatDate = (date: Date) => {
+  // const dateStr = dateNumber.toString();
+  // const year = dateStr.substring(0, 4);
+  // const month = dateStr.substring(4, 6);
+  // const day = dateStr.substring(6, 8);
+  // const hour = dateStr.substring(8, 10);
+  // const minute = dateStr.substring(10, 12);
+  // const second = dateStr.substring(12, 14);
+  // return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
+  return date.toLocaleString()
 };
 
 export default MemoList;

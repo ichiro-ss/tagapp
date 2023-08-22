@@ -36,13 +36,6 @@ export const handleSearch = (
 
     return andOperator ? matchesAllTerms : matchesAnyTerm;
   });
-
-
-//   console.log("searchTerm:", searchTerm);
-//   console.log("searchList:");
-//   searchList.forEach((content, index) => {
-//     console.log(`Memo ${index}:`, content);
-//   });
   
   setSearchResults(filteredMemos);
 };

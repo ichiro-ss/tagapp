@@ -160,21 +160,7 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 		}
 	}
 
-	for _, value := range tagsNameStr {
-		trimtag := strings.TrimSpace(value)
-		tags = append(tags, trimtag)
-	}
-
-	// for _, value := range tagsIdStr {
-	// 	ivalue, err := strconv.Atoi(value)
-	// 	if err != nil {
-	// 		w.WriteHeader(http.StatusBadRequest)
-	// 		w.Write([]byte("`tags`に不正な値が存在します"))
-	// 		isCollectParams = false
-	// 		return
-	// 	}
-	// 	tagsId = append(tagsId, ivalue)
-	// }
+	tags = validTagNames(tagsNameStr)
 
 	memoId = -1
 	memoId, err = strconv.Atoi(memoIdStr)
@@ -499,6 +485,7 @@ func memoGetHandle(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("タグを取得することができませんでした"))
 		return
 	}
+	fmt.Println("tagNames := ", tagNames)
 
 	//--------タグのデータベース取得領域--------------->
 
@@ -509,6 +496,7 @@ func memoGetHandle(w http.ResponseWriter, r *http.Request) {
 
 	err = setJsonData(w, r, memoJson)
 	if err != nil {
+		fmt.Println("Memo Json Error")
 		return
 	}
 

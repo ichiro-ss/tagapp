@@ -8,7 +8,7 @@ export type TagData = {
 const convertTagJsonToTagData = ( data : any ) :TagData => {
     const id = parseInt(data.id)
     const userName = data.UserId
-    const tagName = data.TagName
+    const tagName = data.name
     const memoNum = data.memoNum
 
     const tagData : TagData = {

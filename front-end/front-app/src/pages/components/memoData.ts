@@ -4,7 +4,7 @@ export type MemoData = {
     comment: string;
     filepath ?:string,
     id ?:number,
-    date: string; // 例: 20230816103045
+    date : Date,
     tag: string[];
 };
   
@@ -12,7 +12,6 @@ const convertMemoJsonToMemoData  = ( data: any ) : MemoData => {
     const memo = data.Memo
     const title = memo.Title
     const date = new Date(memo.CreatedAt)
-    const dateStr = date.toLocaleString()
     const id = parseInt(memo.id)
     let picpath =  ""
 
@@ -32,7 +31,7 @@ const convertMemoJsonToMemoData  = ( data: any ) : MemoData => {
         comment : comment,
         filepath : picpath,
         id : id,
-        date : dateStr,
+        date : date,
         tag : tags,
     }
     return memodata

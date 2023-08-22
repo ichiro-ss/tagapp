@@ -37,10 +37,10 @@ export default function MemoDetailedView({memo, memoEditor, memoRemover}: {memo?
       </div>
       <br/>
       <div className='date'>
-        {memo.date}
+        {memo.date.toLocaleString()}
       </div>
       <div className='tags'>
-        { memo.tag.map((tag:string) => "#"+tag+" ") }
+        { memo.tag?.map((tag:string) => "#"+tag+" ") }
       </div>
     </div>
   );
