@@ -183,10 +183,10 @@ type apiMemoSearchParams struct {
 	PageItemAmount int
 }
 
-func parseMemoSearchParams(w http.ResponseWriter, r *http.Request) (params apiMemoSearchParams, isCollectParams bool) {
+func parseMemoSearchParams(w http.ResponseWriter, r *http.Request) (params apiMemoSearchParams, isCorrectParams bool) {
 	params = apiMemoSearchParams{}
 	parseSize := 10 << 20
-	isCollectParams = true
+	isCorrectParams = true
 
 	r.ParseMultipartForm(int64(parseSize))
 
@@ -220,7 +220,7 @@ func parseMemoSearchParams(w http.ResponseWriter, r *http.Request) (params apiMe
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("`startdate`に不正な値が存在します"))
-			isCollectParams = false
+			isCorrectParams = false
 			return
 		}
 		startDate = &tmpDate
@@ -232,7 +232,7 @@ func parseMemoSearchParams(w http.ResponseWriter, r *http.Request) (params apiMe
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("`startdate`に不正な値が存在します"))
-			isCollectParams = false
+			isCorrectParams = false
 			return
 		}
 		startDate = &tmpDate
@@ -243,7 +243,7 @@ func parseMemoSearchParams(w http.ResponseWriter, r *http.Request) (params apiMe
 	if pageIdxStr == "" && err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("`pgeIdx`に不正な値が存在します"))
-		isCollectParams = false
+		isCorrectParams = false
 		return
 	}
 
@@ -251,7 +251,7 @@ func parseMemoSearchParams(w http.ResponseWriter, r *http.Request) (params apiMe
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("`pageItemAmount`に不正な値が存在します"))
-		isCollectParams = false
+		isCorrectParams = false
 		return
 	}
 
@@ -399,8 +399,8 @@ func searchMemoByIndex(pageIndex, pageItemAmount int, memoJsons []apiMemoSearchJ
 
 func searchMemoHandle(w http.ResponseWriter, r *http.Request) {
 	var err error
-	params, isCollectParams := parseMemoSearchParams(w, r)
-	if !isCollectParams {
+	params, isCorrectParams := parseMemoSearchParams(w, r)
+	if !isCorrectParams {
 		return
 	}
 

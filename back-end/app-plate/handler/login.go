@@ -78,8 +78,8 @@ func loginGetHandle(w http.ResponseWriter, r *http.Request) {
 func loginPostHandle(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	params, isCollectParams := parseRequestParams(w, r)
-	if !isCollectParams {
+	params, isCorrectParams := parseRequestParams(w, r)
+	if !isCorrectParams {
 		return
 	}
 
@@ -110,8 +110,8 @@ func loginPutHandle(w http.ResponseWriter, r *http.Request) {
 	gbsession := lib.GetGlobalSessions()
 	sess := gbsession.SessionStart(w, r)
 
-	params, isCollectParams := parseRequestParams(w, r)
-	if !isCollectParams {
+	params, isCorrectParams := parseRequestParams(w, r)
+	if !isCorrectParams {
 		return
 	}
 
