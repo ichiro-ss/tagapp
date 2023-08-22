@@ -131,10 +131,10 @@ func (params *apiMemoParams) print() {
 
 // apiのリクエストのパラメータの解析
 // Getメソッドのみ当関数を利用せず、パースをしているため注意
-func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiMemoParams, isCollectParams bool) {
+func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiMemoParams, isCorrectParams bool) {
 	parseSize := 10 << 20
 	params = apiMemoParams{}
-	isCollectParams = true
+	isCorrectParams = true
 
 	r.ParseMultipartForm(int64(parseSize))
 
@@ -170,7 +170,7 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 	// 	if err != nil {
 	// 		w.WriteHeader(http.StatusBadRequest)
 	// 		w.Write([]byte("`tags`に不正な値が存在します"))
-	// 		isCollectParams = false
+	// 		isCorrectParams = false
 	// 		return
 	// 	}
 	// 	tagsId = append(tagsId, ivalue)
@@ -181,7 +181,7 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 	if memoIdStr != "" && err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("`memoid`に不正な値が存在します"))
-		isCollectParams = false
+		isCorrectParams = false
 		return
 	}
 
@@ -189,7 +189,7 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 	if timeIso != "" && err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("`timeIso`に不正な値が存在します"))
-		isCollectParams = false
+		isCorrectParams = false
 	}
 	datep = &date
 	if timeIso == "" {
@@ -211,8 +211,8 @@ func parseMemoRequestParams(w http.ResponseWriter, r *http.Request) (params apiM
 // Memoの新規作成API
 func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 	var err error
-	params, isCollectParams := parseMemoRequestParams(w, r)
-	if !isCollectParams {
+	params, isCorrectParams := parseMemoRequestParams(w, r)
+	if !isCorrectParams {
 		return
 	}
 
@@ -285,8 +285,8 @@ func memoPostHandle(w http.ResponseWriter, r *http.Request) {
 // memoの更新API
 func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 	// var err error
-	params, isCollectParams := parseMemoRequestParams(w, r)
-	if !isCollectParams {
+	params, isCorrectParams := parseMemoRequestParams(w, r)
+	if !isCorrectParams {
 		return
 	}
 
@@ -415,8 +415,8 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 // 未完成
 func memoDeleteHandle(w http.ResponseWriter, r *http.Request) {
 	var err error
-	params, isCollectParams := parseMemoRequestParams(w, r)
-	if !isCollectParams {
+	params, isCorrectParams := parseMemoRequestParams(w, r)
+	if !isCorrectParams {
 		return
 	}
 
