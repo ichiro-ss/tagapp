@@ -387,7 +387,7 @@ func memoPutHandle(w http.ResponseWriter, r *http.Request) {
 	createTagDatas := makeUserTagArray(createTagNames, memoData.UserId)
 
 	for _, tagData := range deletTagDatas {
-		fmt.Println("Delte: ", tagData)
+		fmt.Println("Delete: ", tagData)
 		err = memoData.DeleteMemoTag(tagData)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
