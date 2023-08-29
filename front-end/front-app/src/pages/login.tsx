@@ -137,8 +137,8 @@ export default function login() {
       <Modal show={showSubmit}>
         <Modal.Body>
           <h3>Submit success!!</h3><br/>
-          <Button variant="primary" onClick={handleCloseLogout}>
-            close
+          <Button variant="primary" onClick={handleCloseSubmit}>
+            Close
           </Button>
         </Modal.Body>
       </Modal>
