@@ -25,12 +25,12 @@
     width: 6px; /* スクロールバーの幅を設定 */
     height: 500px;
 }
-  
+
 .memoList::-webkit-scrollbar-track {
     background: #FFFFFF; /* スクロールバートラックの背景色を設定 */
     background: rgba(0,0,0,0);
 }
-  
+
 .memoList::-webkit-scrollbar-thumb {
     background-color: #888888; /* スクロールバーの背景色を設定 */
     border-radius: 3px; /* スクロールバーサムの角を丸く設定 */
@@ -67,7 +67,7 @@
 .memoContainer:hover { /* カーソルを合わせたときのスタイルを追加 */
     background-color: #E9E9E9;
   }
-  
+
 .memoContainerBar{
     background-color: #ffffff;
     color: #c1c1c1;
@@ -86,8 +86,8 @@
 .memoContainer:hover { /* カーソルを合わせたときのスタイルを追加 */
     background-color: #E9E9E9;
   }
-  
-  
+
+
 .memoTitleGrid {
     font-size: 20px;
     /* font-style: italic; */
@@ -98,7 +98,7 @@
     /* font-style: italic; */
     color: #808080;
 }
-  
+
 .memoTags {
     font-size: 16px;
     color: #808080;
@@ -107,7 +107,7 @@
     font-size: 12px;
     color: #808080;
 }
-  
+
 .memoCommentGrid {
     font-size: 16px;
     color: #808080;
@@ -120,7 +120,7 @@
     margin-top: 0px;
     text-align: left; /* 左揃えにするために追加 */
 }
-  
+
 .memoDate {
     font-size: 16px;
     color: #808080;
