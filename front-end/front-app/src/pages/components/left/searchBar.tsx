@@ -3,7 +3,7 @@ import Header from "../header";
 import { Back_Index } from "../../constants";
 import Link from "next/link";
 import { MemoData, convertMemoJsonArrayToMemoDataArray } from "../memoData";
-import styles from '../../../styles/leftside.module.css'; 
+import styles from '../../../styles/leftside.module.css';
 import { makeCROSRequest } from "@/lib/helper";
 
 interface searchBarProps{
@@ -27,7 +27,7 @@ const SearchBar: React.FC<searchBarProps> = (props) => {
   const [keywords, setKeywords] = useState<string[]>([]);
   const [startDate, setStratDate] = useState<Date>();
 
-  
+
   // すべてのメモを検索する関数
   const OnSearchAllMemo= () => {
     const url = Back_Index+`/api/memosearch`
@@ -75,7 +75,7 @@ const SearchBar: React.FC<searchBarProps> = (props) => {
 
     const pageidx = 1
     const pageAmount = 1000
-    
+
     // tagOnlyの真偽によって，タグのみ検索か全文かを決定.
     if(tagOnly){
       for ( const tag of searchTerm) {
@@ -96,9 +96,9 @@ const SearchBar: React.FC<searchBarProps> = (props) => {
       form.append("tagoption", "or")
     }
     console.log(searchTerm)
-    
 
-    
+
+
     form.append("username", props.username)
     form.append("pageidx", pageidx.toString())
     form.append("pageItemAmount", pageAmount.toString())

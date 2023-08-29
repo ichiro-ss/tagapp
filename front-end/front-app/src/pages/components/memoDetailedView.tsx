@@ -53,7 +53,7 @@ function PreviewDoc({filepath}:{filepath:string}): JSX.Element{
   const {data, error, isLoading}=useSWR(fname, fetcher);
 
   const iflamestyles = {
-    
+
   }
 
   if(!!error) return <div>failed to load</div>;

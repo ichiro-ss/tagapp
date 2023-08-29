@@ -14,7 +14,7 @@ const makeCROSRequest = (request : any) => {
   request.credentials = "include"
   request.headers = {
       "Access-Control-Allow-Credentials": "true",
-  } 
+  }
   return request
 }
 
@@ -118,7 +118,7 @@ const MemoModal = ({ show, onClose, onCreate }: MemoModalProps) => {
     resetForm();
   };
 
-  
+
 
   // const addFileInput = () => {
   //   setFileInputs([...fileInputs, fileInputs.length]); // 新しいファイル入力欄を追加
