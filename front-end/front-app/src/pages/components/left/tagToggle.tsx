@@ -8,7 +8,7 @@ type TagToggleProps = {
 const TagToggle: React.FC<TagToggleProps> = ({ onToggle, showTags }) => {
   return (
     <div>
-      <button 
+      <button
         onClick={onToggle}
         style={{ border: "none", background: "none", color: "#808080"}} // ボーダーと背景を非表示に
         >

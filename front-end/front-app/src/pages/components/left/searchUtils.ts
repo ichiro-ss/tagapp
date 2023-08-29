@@ -29,7 +29,7 @@ export const handleSearch = (
     const matchesAllTerms = searchTerms.every((term) =>
     searchList[index].some((content) => content.includes(term))
   );
-  
+
   const matchesAnyTerm = searchTerms.some((term) =>
     searchList[index].some((content) => content.includes(term))
   );
@@ -43,6 +43,6 @@ export const handleSearch = (
 //   searchList.forEach((content, index) => {
 //     console.log(`Memo ${index}:`, content);
 //   });
-  
+
   setSearchResults(filteredMemos);
 };

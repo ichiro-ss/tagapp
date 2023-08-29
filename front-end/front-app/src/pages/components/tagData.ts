@@ -27,7 +27,7 @@ export const convertTagJsonArrayToTagDataArray= ( dataArray : any ) : TagData[] 
     if ( dataArray == null ) {
         return tagDataArray;
     }
-    
+
     for ( const data of dataArray ) {
         tagDataArray.push(convertTagJsonToTagData(data))
     }

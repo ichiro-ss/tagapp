@@ -89,7 +89,7 @@ front-end
  - __src/styles__ : 各コンポーネントのスタイルを操作するcss関連のフォルダ
 
  (あと多分 __public__ フォルダ)
- 
+
  #### DockerFile
 フロントエンドの実行環境用(Node.js)のコンテナファイル
 

@@ -15,7 +15,7 @@ const setInitMemoMemos = async (username : string, setFunc : ( x : MemoData[])=>
   const pageIdx = 1
   const pageAmount = 100
   const url = Back_Index+`/api/memosearch?username=${username}&pageidx=${pageIdx}&pageItemAmount=${pageAmount}`
-  let result : MemoData[] = [] 
+  let result : MemoData[] = []
 
   fetch(url, makeCROSRequest({}))
   .then( (res:Response) => {
@@ -26,7 +26,7 @@ const setInitMemoMemos = async (username : string, setFunc : ( x : MemoData[])=>
         result = convertMemoJsonArrayToMemoDataArray(data)
         setFunc(result)
       })
-    } 
+    }
   })
   .catch( err => {
     console.error(err)
@@ -51,13 +51,13 @@ export default function Home() {
       if(res.status!==200){ console.log("logout fail"); }
       else{ setIsLoggedIn(false); }
     })}
-    
+
     useEffect( () => {
       const loginURL=Back_Index+"/api/login"
       fetch(loginURL, makeCROSRequest({}))
       .then( (res : Response) => {
         if ( res.ok ) {
-  
+
           res.json()
           .then( async (data) => {
             console.log("userData=", data)
@@ -68,9 +68,9 @@ export default function Home() {
         }
       })
       console.log("initMount")
-  
+
     }, [])
-  
+
   fetch(url,makeCROSRequest({method:'GET'}))
   .then( (res:Response)=>{
     if(!res.ok){
@@ -88,24 +88,24 @@ export default function Home() {
       console.log(error);
       setIsLoggedIn(false);
     });
-    
+
     // 開発中は無効化
     useEffect( ()=>{
       if(isLoggedIn!=null && !isLoggedIn) router.push("/login");
   }, [isLoggedIn]
   );
-  
+
   if(isLoggedIn==undefined){
     return <>Loading...</>;
   }
-  
+
   if(!isLoggedIn){
     //開発中につき無効化
     router.replace("/login")
     return <>Failed</>;
   }
-  
-  
+
+
   return (
     <div>
       <div className="container-fluid content">

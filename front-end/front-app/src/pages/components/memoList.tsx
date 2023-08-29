@@ -35,7 +35,7 @@ const MemoList: React.FC<MemoListProps> = (props) => {
     };
 
 
-  
+
     return (
        // ソート方法，表示形式で変える
        <div className={styles.memoList}>
@@ -88,7 +88,7 @@ const MemoList: React.FC<MemoListProps> = (props) => {
             </div>
           )}
         </div> */}
-        
+
         {/* フッター */}
         <div className={styles.footer}>
             <button className={styles.displayFormat} onClick={toggleDisplayFormat}>

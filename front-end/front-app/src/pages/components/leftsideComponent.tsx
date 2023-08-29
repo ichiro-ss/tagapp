@@ -29,7 +29,7 @@ const makeCROSRequest = (request: any) => {
 export const LeftSideComponent: React.FC<LeftsideComponentProps> = (props) => {
   const url = Back_Index + "/api/memo";
   const [userId, setUserId] = useState("");
-  
+
 
   // ユーザー情報を取得するためのEffect
   const getUser = useEffect(() => {
@@ -44,7 +44,7 @@ export const LeftSideComponent: React.FC<LeftsideComponentProps> = (props) => {
   // メモ検索画面
   const [searchResults, setSearchResults] = useState<MemoData[]>([]);
   const [showTags, setShowTags] = useState(false);
-  
+
 
   // 新規メモを作成するポップアップ画面
   const [showModal, setShowModal] = useState(false);
@@ -68,7 +68,7 @@ export const LeftSideComponent: React.FC<LeftsideComponentProps> = (props) => {
       if (res.ok) {
         res.json()
         .then(data=>{
-          setSortedTags(convertTagJsonArrayToTagDataArray(data)) 
+          setSortedTags(convertTagJsonArrayToTagDataArray(data))
         })
       }
     })
@@ -101,7 +101,7 @@ export const LeftSideComponent: React.FC<LeftsideComponentProps> = (props) => {
           </div>
         )}
       </div>
-      
+
       {/* メモ作成ボタン and メモ作成モーダル */}
       <OpenModalButton onOpen={handleOpenModal} />
       <MemoModal show={showModal} onClose={handleCloseModal} onCreate={handleCreateMemo} />
@@ -111,7 +111,7 @@ export const LeftSideComponent: React.FC<LeftsideComponentProps> = (props) => {
   );
 };
 
-  
+
 function formatDate(date: number): string {
   const year = Math.floor(date / 10000000000);
   const month = Math.floor((date % 10000000000) / 100000000);
@@ -121,5 +121,5 @@ function formatDate(date: number): string {
   const second = date % 100;
   return `${year}/${month}/${day} ${hour}:${minute}:${second}`;
 }
-  
+
 

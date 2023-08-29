@@ -7,7 +7,7 @@ export type MemoData = {
     date: string; // 例: 20230816103045
     tag: string[];
 };
-  
+
 const convertMemoJsonToMemoData  = ( data: any ) : MemoData => {
     const memo = data.Memo
     const title = memo.Title
@@ -44,7 +44,7 @@ export const convertMemoJsonArrayToMemoDataArray = ( dataArray : any ) : MemoDat
     if ( dataArray == null ) {
         return memoDataArray;
     }
-    
+
     for ( const data of dataArray ) {
         memoDataArray.push(convertMemoJsonToMemoData(data))
     }

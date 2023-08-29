@@ -9,7 +9,7 @@ const makeCROSRequest = (request : any) => {
     request.credentials = "include"
     request.headers = {
         "Access-Control-Allow-Credentials": "true",
-    } 
+    }
     return request
 }
 
@@ -30,7 +30,7 @@ export default function Home() {
     // いるやつ
     const url = Back_Index + "/api/memo"
     // タイトル，コメント，ユーザーID，ID，タグ
-    const [memoTitle, setMemoTitle] = useState("") 
+    const [memoTitle, setMemoTitle] = useState("")
     const [memoMain, setMemoMain] = useState("")
     const [userId, setUserId] = useState("")
     const [memoId, setMemoId] = useState(0)
@@ -136,7 +136,7 @@ export default function Home() {
             } else {
                 return;
             }
-            
+
         })
         .then( data => {
             console.log("メモの取得に成功しました")
@@ -146,7 +146,7 @@ export default function Home() {
             console.error(err)
         })
     }
-    
+
 
 
     // メモの更新を処理するハンドラー
@@ -222,7 +222,7 @@ export default function Home() {
                 <p>MemoID : {memoId} </p>
                 <div>
                     {
-                        memoTags.map( (item, index) => 
+                        memoTags.map( (item, index) =>
                             <p>Tag No{index}. {item}</p>
                         )
                     }

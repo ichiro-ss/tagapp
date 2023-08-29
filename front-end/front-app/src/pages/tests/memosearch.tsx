@@ -203,11 +203,11 @@ export default function Home() {
             } else {
                 res.text().then(data => console.log(data) )
             }
-        }) 
+        })
         .catch( err => {
             console.error(err)
         })
-        
+
     }
     return (
         <div>

@@ -5,7 +5,7 @@ import styles from '../../../styles/leftside.module.css';
 type UserContainerProps = {
   username : string
 };
-  
+
   const UserContainer: React.FC<UserContainerProps> = (props) => {
     return (
     <div className={styles.userContainer}>
