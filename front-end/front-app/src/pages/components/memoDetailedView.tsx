@@ -7,12 +7,33 @@ import { Back_Index } from '../constants';
 import { makeCROSRequest } from '@/lib/helper';
 
 //memoEditor, memoRemoverの実装はあと
-export default function MemoDetailedView({memo, memoEditor, memoRemover}: {memo?:MemoData, memoEditor?:any, memoRemover?:any}): JSX.Element{
+export default function MemoDetailedView({memo, memoEditor}: {memo?:MemoData, memoEditor?:any, memoRemover?:any}): JSX.Element{
   if(memo == null){
     return(
       <div className='detailedView m-1'>
       </div>
     );
+  }
+
+  const memoRemover = () => {
+    const url = Back_Index + "/api/memo"
+    const req = {
+      method: "DELETE",
+      body: memo.id
+    }
+    fetch( url, makeCROSRequest(req))
+    .then(res => {
+      if ( !res.ok ) {
+        res.text().then( text => {
+          console.log(text)
+        })
+        return
+      }
+      console.log("Fetch Finished")
+    })
+    .catch( err => {
+      console.error(err)
+    })
   }
 
   return(
