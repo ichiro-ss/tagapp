@@ -4,10 +4,11 @@ services:
     build:
       context: ./front-end
     ports:
-      - "8080:3000"
+      - "9000:3000"
+    working_dir: /home/node/app
     volumes:
-      - ./front-end/front-app:/app
-      - node_modules:/app/node_modules
+      - ./front-end/front-app:/home/node/app
+      - node_modules:/home/node/app/node_modules
     command: sh -c "npm run dev"
   app-plate:
     container_name: app-plate-go
