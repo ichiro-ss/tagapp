@@ -7,10 +7,20 @@ import (
 	"strings"
 )
 
+func GetPUblicAddr() string {
+
+	//デプロイ時に書き換える
+	publicIPAddr := "localhost:8080"
+
+	return publicIPAddr
+}
+
 func SetCrosOptions(w http.ResponseWriter, r *http.Request) (isOptions bool) {
 
 	isOptions = r.Method == http.MethodOptions
-	allowedURL := [3]string{"http://localhost:3000", "http://localhost:9000", "http://localhost:8080"}
+
+	// allowedURL := [4]string{"http://localhost:3000", "http://localhost:9000", "http://localhost:8080", "http://" + GetPUblicAddr()}
+	allowedURL := [1]string{"http://" + GetPUblicAddr()}
 
 	//リクエスト元のURL
 	referer := r.Header.Get("Referer")

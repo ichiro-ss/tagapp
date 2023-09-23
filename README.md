@@ -123,3 +123,6 @@ CORS対策のために、クロスエンド側にはリクエストに対して�
   }
  }
 ```
+
+## deploy手順
+default.confと、front-appのconstants, app-plateのcorsのpublicIpAddrの値をec2インスタンスのパブリックIPアドレスに変更

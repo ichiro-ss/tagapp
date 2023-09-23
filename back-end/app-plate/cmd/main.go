@@ -16,7 +16,8 @@ import (
 
 func enableCORS(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		allowedURL := [3]string{"http://localhost:3000", "http://localhost:9000", "http://localhost:8080"}
+		// allowedURL := [3]string{"http://localhost:3000", "http://localhost:9000", "http://localhost:8080"}
+		allowedURL := [1]string{"http://" + handler.GetPUblicAddr()}
 
 		//リクエスト元のURL
 		referer := r.Header.Get("Referer")
