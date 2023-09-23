@@ -10,8 +10,7 @@ import (
 func SetCrosOptions(w http.ResponseWriter, r *http.Request) (isOptions bool) {
 
 	isOptions = r.Method == http.MethodOptions
-	// const allowedURL := ["http://localhost:3000"]
-	allowedURL := [2]string{"http://localhost:3000", "http://localhost:9000"}
+	allowedURL := [3]string{"http://localhost:3000", "http://localhost:9000", "http://localhost:8080"}
 
 	//リクエスト元のURL
 	referer := r.Header.Get("Referer")

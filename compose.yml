@@ -9,6 +9,8 @@ services:
     volumes:
       - ./front-end/front-app:/home/node/app
       - node_modules:/home/node/app/node_modules
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: sh -c "npm run dev"
   app-plate:
     container_name: app-plate-go
@@ -28,6 +30,8 @@ services:
       - TZ=Asia/Tokyo
     networks:
       - tagapp_backend_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: sh -c "go run ./cmd/main.go"
   db:
     build: ./back-end/mysql/
@@ -41,6 +45,15 @@ services:
       - 3306:3306
     networks:
       - tagapp_backend_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  nginx:
+    build:
+      ./nginx
+    ports:
+    - "8080:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   node_modules:

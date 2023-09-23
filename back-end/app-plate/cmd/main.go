@@ -16,7 +16,7 @@ import (
 
 func enableCORS(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		allowedURL := [2]string{"http://localhost:3000", "http://localhost:9000"}
+		allowedURL := [3]string{"http://localhost:3000", "http://localhost:9000", "http://localhost:8080"}
 
 		//リクエスト元のURL
 		referer := r.Header.Get("Referer")
@@ -28,7 +28,6 @@ func enableCORS(h http.Handler) http.Handler {
 				w.Header().Set("Access-Control-Allow-Origin", value)
 			}
 		}
-		// w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, access-control-allow-credentials")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
