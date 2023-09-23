@@ -55,6 +55,9 @@ func loginGetHandle(w http.ResponseWriter, r *http.Request) {
 	sess := gbsession.SessionStart(w, r)
 	user := lib.GetSessionUser(&sess)
 
+	tmpuser := lib.GetSessionUser(&sess)
+	fmt.Println(tmpuser)
+
 	if user == nil {
 		w.WriteHeader(http.StatusBadRequest)
 		setMessage(w, "ログインしていません")

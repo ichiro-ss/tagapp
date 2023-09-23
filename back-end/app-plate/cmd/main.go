@@ -55,14 +55,13 @@ func enableCORS(h http.Handler) http.Handler {
 }
 
 func setHandle() {
-	// http.Handle("/")
-	http.HandleFunc("/test", handler.TestHandler)
-	http.HandleFunc("/print", handler.TestHandlerPrint)
-	http.HandleFunc("/api/login", handler.LoginHandler)
-	http.HandleFunc("/api/logout", handler.LogoutHandler)
-	http.HandleFunc("/api/memo", handler.MemoHandler)
-	http.HandleFunc("/api/memosearch", handler.MemoSearchHanlder)
-	http.HandleFunc("/api/tags", handler.TagHandler)
+	http.HandleFunc("/api/test", handler.TestHandler)
+	http.HandleFunc("/api/print", handler.TestHandlerPrint)
+	http.HandleFunc("/back/api/login", handler.LoginHandler)
+	http.HandleFunc("/back/api/logout", handler.LogoutHandler)
+	http.HandleFunc("/back/api/memo", handler.MemoHandler)
+	http.HandleFunc("/back/api/memosearch", handler.MemoSearchHanlder)
+	http.HandleFunc("/back/api/tags", handler.TagHandler)
 }
 
 func main() {
@@ -81,7 +80,7 @@ func main() {
 	dir, _ := os.Getwd()
 	fmt.Println("dir = ", dir)
 	// http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir(dir+"/img/"))))
-	http.Handle("/img/", enableCORS(http.StripPrefix("/img/", http.FileServer(http.Dir(dir+"/img/")))))
+	http.Handle("/back/img/", enableCORS(http.StripPrefix("/back/img/", http.FileServer(http.Dir(dir+"/img/")))))
 
 	fmt.Println("Start Listen " + serverURL)
 	setHandle()
