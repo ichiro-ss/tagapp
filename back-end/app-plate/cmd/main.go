@@ -56,8 +56,8 @@ func enableCORS(h http.Handler) http.Handler {
 }
 
 func setHandle() {
-	http.HandleFunc("/api/test", handler.TestHandler)
-	http.HandleFunc("/api/print", handler.TestHandlerPrint)
+	http.HandleFunc("/back/api/test", handler.TestHandler)
+	http.HandleFunc("/back/api/print", handler.TestHandlerPrint)
 	http.HandleFunc("/back/api/login", handler.LoginHandler)
 	http.HandleFunc("/back/api/logout", handler.LogoutHandler)
 	http.HandleFunc("/back/api/memo", handler.MemoHandler)

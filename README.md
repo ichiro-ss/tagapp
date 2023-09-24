@@ -126,3 +126,7 @@ CORS対策のために、クロスエンド側にはリクエストに対して�
 
 ## deploy手順
 default.confと、front-appのconstants, app-plateのcorsのpublicIpAddrの値をec2インスタンスのパブリックIPアドレスに変更
+
+nginx/default.conf
+front-end/front-app/src/pages/constants.tsx
+back-end/app-plate/handler/cros.go
